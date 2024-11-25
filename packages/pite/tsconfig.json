@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/cjs",
+        "baseUrl": "src",
+        "target": "ESNext",
+        "module": "CommonJS",
+        "lib": ["ESNext"],
+        "composite": false,
+        "declaration": true,
+        "esModuleInterop": true,
+        "inlineSources": false,
+        "isolatedModules": true,
+        "preserveWatchOutput": true,
+        "skipLibCheck": true,
+        "strict": true
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "dist"]
+}
