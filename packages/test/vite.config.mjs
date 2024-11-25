@@ -1,12 +1,14 @@
-import {resolve} from 'node:path'
+import {fileURLToPath} from 'url'
 
 import {createViteConfig} from '@naverpay/pite'
+
+const getPath = (path) => fileURLToPath(new URL(path, import.meta.url))
 
 export default createViteConfig({
     formats: ['es', 'cjs'],
     input: {
-        transpile: resolve(__dirname, 'src/utils/transpile'),
-        polyfill: resolve(__dirname, 'src/polyfill'),
+        transpile: getPath('src/utils/transpile'),
+        polyfill: getPath('src/polyfill'),
     },
     options: {
         minify: false,
