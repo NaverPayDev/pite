@@ -1,0 +1,35 @@
+{
+    "name": "@naverpay/pite",
+    "author": "@NaverPayDev/frontend",
+    "version": "0.0.1",
+    "description": "vite 번들러 패키지",
+    "main": "./dist/cjs/index.js",
+    "module": "./dist/esm/index.js",
+    "types": "./dist/cjs/index.d.ts",
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./dist/esm/index.d.ts",
+                "default": "./dist/esm/index.js"
+            },
+            "require": {
+                "types": "./dist/cjs/index.d.ts",
+                "default": "./dist/cjs/index.js"
+            }
+        },
+        "./package.json": "./package.json"
+    },
+    "scripts": {
+        "tsc": "tsc",
+        "build": "tsc -p tsconfig.json && tsc -p tsconfig.esm.json",
+        "clean": "rm -rf ./dist"
+    },
+    "dependencies": {
+        "browserslist": "^4.24.2",
+        "browserslist-to-esbuild": "^2.1.1",
+        "vite-plugin-dts": "^4.3.0"
+    },
+    "peerDependencies": {
+        "vite": "^5.4.11"
+    }
+}

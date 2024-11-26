@@ -1,0 +1,35 @@
+{
+    "name": "@naverpay/test",
+    "author": "@NaverPayDev/frontend",
+    "version": "0.0.1",
+    "description": "vite 번들러 패키지 테스트",
+    "sideEffects": false,
+    "main": "./dist/cjs/index.js",
+    "module": "./dist/esm/index.js",
+    "types": "./dist/cjs/index.d.ts",
+    "exports": {
+        "./transpile": {
+            "require": {
+                "types": "./dist/cjs/utils/transpile.d.ts",
+                "default": "./dist/cjs/utils/transpile.js"
+            },
+            "import": {
+                "types": "./dist/esm/utils/transpile.d.ts",
+                "default": "./dist/esm/utils/transpile.js"
+            }
+        },
+        "./package.json": "./package.json"
+    },
+    "scripts": {
+        "clean": "rm -rf ./dist",
+        "build": "vite build",
+        "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
+        "lint:fix": "pnpm run lint --fix",
+        "prettier": "prettier --check '**/*.{json,yaml,md,ts,tsx,js,jsx}'",
+        "prettier:fix": "prettier --write '**/*.{json,yaml,md,ts,tsx,js,jsx}'"
+    },
+    "devDependencies": {
+        "@naverpay/pite": "workspace:*",
+        "vite": "^5.4.11"
+    }
+}

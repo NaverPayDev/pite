@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/esm",
+        "baseUrl": "src",
+        "target": "ESNext",
+        "module": "ESNext",
+        "lib": ["ESNext"],
+        "composite": false,
+        "declaration": true,
+        "esModuleInterop": true,
+        "inlineSources": false,
+        "isolatedModules": true,
+        "preserveWatchOutput": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "moduleResolution": "Bundler"
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "dist"]
+}
