@@ -33,7 +33,6 @@ interface ViteConfigProps {
 }
 export function createViteConfig({formats, input, options}: ViteConfigProps) {
     const build: BuildOptions = {
-        ...(options || {}),
         target: browserslistToEsbuild(),
         lib: {
             formats,
@@ -50,6 +49,7 @@ export function createViteConfig({formats, input, options}: ViteConfigProps) {
                 return `${directory}/${filePath}.${extension}`
             },
         },
+        ...(options || {}),
     }
 
     const plugins = [
