@@ -1,6 +1,8 @@
 import {defineConfig} from 'vite'
 import dts from 'vite-plugin-dts'
 
+import pkg from './package.json'
+
 export default defineConfig({
     build: {
         lib: {
@@ -8,7 +10,10 @@ export default defineConfig({
             entry: 'src/index',
         },
         rollupOptions: {
-            external: [/node_modules/],
+            external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)].flatMap((dep) => [
+                dep,
+                new RegExp(`^${dep}/.*`),
+            ]),
             output: [
                 {
                     dir: 'dist/esm',
