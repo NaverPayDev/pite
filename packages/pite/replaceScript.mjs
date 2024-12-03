@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-const fs = require('fs')
-const path = require('path')
+import {readFileSync, writeFileSync} from 'fs'
+import {join} from 'path'
 
 /**
  * dist 내부에 copy된 package.json의 export경로를 변경하기위한 스크립트
@@ -9,11 +8,11 @@ const path = require('path')
  */
 
 // dist에 copy된 package.json 파일 경로
-const packageJsonPath = path.join(process.cwd(), 'dist/package.json')
-const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
+const packageJsonPath = join(process.cwd(), 'dist/package.json')
+const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'))
 const packageJsonString = JSON.stringify(packageJson, null, 4)
 // /dist/esm, /dist/cjs -. /esm, /cjs 변경
 const replacedPackageJsonString = packageJsonString.replace(/\/dist\/esm/g, '/esm').replace(/\/dist\/cjs/g, '/cjs')
 
 // 수정된 package.json 파일 저장
-fs.writeFileSync(packageJsonPath, replacedPackageJsonString)
+writeFileSync(packageJsonPath, replacedPackageJsonString)

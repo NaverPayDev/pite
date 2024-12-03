@@ -26,7 +26,7 @@
     "scripts": {
         "clean": "rm -rf ./dist",
         "vite": "vite build",
-        "pre-publish": "cp package.json dist/ && cp README.md dist/ && node replaceScript.js",
+        "pre-publish": "cp package.json dist/ && cp README.md dist/ && node replaceScript.mjs",
         "build": "pnpm run clean && pnpm run vite && pnpm run pre-publish"
     },
     "dependencies": {
