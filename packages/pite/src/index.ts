@@ -3,7 +3,6 @@ import browserslistToEsbuild from 'browserslist-to-esbuild'
 import {BuildOptions, defineConfig} from 'vite'
 import dts from 'vite-plugin-dts'
 
-// FIXME: moduleResolution
 import {shouldInjectPolyfill} from './polyfill'
 
 function getEntry(input: Record<string, string>) {
