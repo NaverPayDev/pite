@@ -45,7 +45,8 @@ export function createViteConfig({formats, input, options}: ViteConfigProps) {
             fileName: (format, entry) => {
                 const directory = format === 'es' ? 'esm' : 'cjs'
                 const extension = format === 'es' ? 'mjs' : 'js'
-                const filePath = input[entry]?.split('src/')[1]
+
+                const filePath = entry.includes('/') ? '' : input[entry]?.split('src/')[1]
 
                 if (typeof filePath !== 'string') {
                     throw Error(`filePath undefined error. input 확인`)
