@@ -26,9 +26,8 @@
     "scripts": {
         "clean": "rm -rf ./dist",
         "vite": "vite build",
-        "copy": "cp package.json dist/ && cp README.md dist/",
-        "replace-dist": "node replaceScript.js",
-        "build": "pnpm run clean && pnpm run vite && pnpm run copy && pnpm run replace-dist"
+        "pre-publish": "cp package.json dist/ && cp README.md dist/ && node replaceScript.js",
+        "build": "pnpm run clean && pnpm run vite && pnpm run pre-publish"
     },
     "dependencies": {
         "@babel/plugin-transform-runtime": "^7.25.9",
