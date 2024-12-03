@@ -5,13 +5,13 @@
     "private": true,
     "description": "vite 번들러 패키지",
     "main": "./dist/cjs/index.js",
-    "module": "./dist/esm/index.js",
+    "module": "./dist/esm/index.mjs",
     "types": "./dist/cjs/index.d.ts",
     "exports": {
         ".": {
             "import": {
-                "types": "./dist/esm/index.d.ts",
-                "default": "./dist/esm/index.js"
+                "types": "./dist/esm/index.d.mts",
+                "default": "./dist/esm/index.mjs"
             },
             "require": {
                 "types": "./dist/cjs/index.d.ts",
@@ -24,11 +24,11 @@
         "dist"
     ],
     "scripts": {
-        "tsc": "tsc",
+        "clean": "rm -rf ./dist",
+        "vite": "vite build",
         "copy": "cp package.json dist/ && cp README.md dist/",
         "replace-dist": "node replaceScript.js",
-        "build": "tsc -p tsconfig.json && tsc -p tsconfig.esm.json && pnpm run copy && pnpm run replace-dist",
-        "clean": "rm -rf ./dist"
+        "build": "pnpm run clean && pnpm run vite && pnpm run copy && pnpm run replace-dist"
     },
     "dependencies": {
         "@babel/plugin-transform-runtime": "^7.25.9",
