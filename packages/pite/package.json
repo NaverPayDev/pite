@@ -4,26 +4,30 @@
     "version": "0.0.1",
     "private": true,
     "description": "vite 번들러 패키지",
-    "main": "./cjs/index.js",
-    "module": "./esm/index.js",
-    "types": "./cjs/index.d.ts",
+    "main": "./dist/cjs/index.js",
+    "module": "./dist/esm/index.js",
+    "types": "./dist/cjs/index.d.ts",
     "exports": {
         ".": {
             "import": {
-                "types": "./esm/index.d.ts",
-                "default": "./esm/index.js"
+                "types": "./dist/esm/index.d.ts",
+                "default": "./dist/esm/index.js"
             },
             "require": {
-                "types": "./cjs/index.d.ts",
-                "default": "./cjs/index.js"
+                "types": "./dist/cjs/index.d.ts",
+                "default": "./dist/cjs/index.js"
             }
         },
         "./package.json": "./package.json"
     },
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "tsc": "tsc",
         "copy": "cp package.json dist/ && cp README.md dist/",
-        "build": "tsc -p tsconfig.json && tsc -p tsconfig.esm.json && pnpm run copy",
+        "replace-dist": "node replaceScript.js",
+        "build": "tsc -p tsconfig.json && tsc -p tsconfig.esm.json && pnpm run copy && pnpm run replace-dist",
         "clean": "rm -rf ./dist"
     },
     "dependencies": {
