@@ -1,14 +1,11 @@
-import {defineConfig} from 'vite'
-import dts from 'vite-plugin-dts'
-
 import pkg from './package.json'
+import {createViteConfig} from './src/index'
 
-export default defineConfig({
-    build: {
-        lib: {
-            formats: ['cjs', 'es'],
-            entry: 'src/index',
-        },
+// @ts-check
+export default createViteConfig({
+    formats: ['es', 'cjs'],
+    entry: 'src/index',
+    options: {
         rollupOptions: {
             external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)].flatMap((dep) => [
                 dep,
@@ -29,17 +26,5 @@ export default defineConfig({
                 },
             ],
         },
-        minify: false,
     },
-    plugins: [
-        dts({
-            outDir: ['dist/cjs', 'dist/esm'],
-            beforeWriteFile: (filePath, content) => {
-                const isEsm = filePath.includes('esm')
-                const replacedFilePath = isEsm ? filePath.replace('.d.ts', '.d.mts') : filePath
-
-                return {filePath: replacedFilePath, content}
-            },
-        }),
-    ],
 })
