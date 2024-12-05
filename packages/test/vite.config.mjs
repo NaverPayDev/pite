@@ -1,15 +1,18 @@
-import {fileURLToPath} from 'node:url'
-
 import {createViteConfig} from '@naverpay/pite'
 
-const getPath = (path) => fileURLToPath(new URL(path, import.meta.url))
+// TODO : js, d.ts 간 디렉토리 문제 해결 필요
+export const testInputMap = {
+    index: './src/index',
+    transpile: './src/utils/transpile',
+    polyfill: './src/polyfill',
+}
 
+export const testEntryPath = './src/index'
+
+// @ts-check
 export default createViteConfig({
     formats: ['es', 'cjs'],
-    input: {
-        transpile: getPath('src/utils/transpile'),
-        polyfill: getPath('src/polyfill'),
-    },
+    entry: testEntryPath,
     options: {
         minify: false,
     },
