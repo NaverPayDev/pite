@@ -25,9 +25,8 @@
     ],
     "scripts": {
         "clean": "rm -rf ./dist",
-        "vite": "vite build",
-        "pre-publish": "cp package.json dist/ && cp README.md dist/ && node replaceScript.mjs",
-        "build": "pnpm run clean && pnpm run vite && pnpm run pre-publish"
+        "prepublish": "cp package.json dist/ && cp README.md dist/ && node replaceScript.mjs",
+        "build": "pnpm run clean && vite build"
     },
     "dependencies": {
         "@babel/plugin-transform-runtime": "^7.25.9",
@@ -39,6 +38,9 @@
         "vite-plugin-dts": "^4.3.0"
     },
     "peerDependencies": {
-        "vite": "^5.4.11"
+        "vite": ">=5.4.11"
+    },
+    "devDependencies": {
+        "@types/node": "^22.10.2"
     }
 }
