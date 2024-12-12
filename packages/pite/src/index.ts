@@ -1,10 +1,10 @@
 import browserslist from '@naverpay/browserslist-config'
 import babel from '@rollup/plugin-babel'
-import {getBrowserslistConfig} from 'browserslist'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import {BuildOptions, defineConfig} from 'vite'
 import dts from 'vite-plugin-dts'
 
+import {getBrowserslistConfig} from './browserslist'
 import {shouldInjectPolyfill} from './polyfill'
 
 export interface ViteConfigProps {
