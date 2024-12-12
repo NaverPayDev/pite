@@ -8,7 +8,7 @@ import {getBrowserslistConfig} from './browserslist'
 import {shouldInjectPolyfill} from './polyfill'
 
 export interface ViteConfigProps {
-    packageDir: string
+    cwd: string
     formats: ('es' | 'cjs')[]
     entry: string | string[] | Record<string, string>
     options?: BuildOptions
@@ -20,8 +20,8 @@ const replaceExtension = (target: string, replacement: '.mjs' | '.js') => {
     return target.replace(regex, replacement)
 }
 
-export function createViteConfig({packageDir, formats, entry, options}: ViteConfigProps) {
-    const browserslistConfig = getBrowserslistConfig(packageDir)
+export function createViteConfig({cwd, formats, entry, options}: ViteConfigProps) {
+    const browserslistConfig = getBrowserslistConfig(cwd)
 
     const build: BuildOptions = {
         target: browserslistToEsbuild(browserslistConfig || browserslist),

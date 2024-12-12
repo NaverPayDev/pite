@@ -3,13 +3,13 @@ import path from 'node:path'
 
 import {cosmiconfigSync} from 'cosmiconfig'
 
-export function getBrowserslistConfig(packageDir: string) {
+export function getBrowserslistConfig(cwd: string) {
     const reader = cosmiconfigSync('browserslist')
-    const browserslist = reader.search(packageDir)
+    const browserslist = reader.search(cwd)
     if (browserslist) {
         return browserslist.config
     }
-    const packageJSONPath = path.join(packageDir, 'package.json')
+    const packageJSONPath = path.join(cwd, 'package.json')
     const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, 'utf-8'))
     if ('browserslist' in packageJSON) {
         return packageJSON.browserslist

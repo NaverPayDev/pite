@@ -3,7 +3,7 @@ import {createViteConfig} from './src/index'
 
 // @ts-check
 export default createViteConfig({
-    packageDir: __dirname,
+    cwd: __dirname,
     formats: ['es', 'cjs'],
     entry: 'src/index',
     options: {
