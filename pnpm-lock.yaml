@@ -41,6 +41,9 @@ importers:
       '@babel/plugin-transform-runtime':
         specifier: ^7.25.9
         version: 7.25.9(@babel/core@7.26.0)
+      '@naverpay/browserslist-config':
+        specifier: ^2.0.0
+        version: 2.0.0
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.26.0)(rollup@4.27.4)
@@ -504,6 +507,9 @@ packages:
 
   '@naverpay/ast-parser@0.0.2':
     resolution: {integrity: sha512-o9T9GmtF2r/z4jQVgUsaNrupKsxvpZ+zsa21UB37l7fnZSv3Nef8CiNFp2p4u5Vojp+X/uV/XT0sBw2kwd4y3w==}
+
+  '@naverpay/browserslist-config@2.0.0':
+    resolution: {integrity: sha512-fL537GfJbRqWL1sts/uN92u+dHZCusLfJOPMlCeY6M8/KxJRZP1EoUw8JouS97u1VzoDALZHfvlo2Tu2kfGVoA==}
 
   '@naverpay/eslint-config@1.0.7':
     resolution: {integrity: sha512-gMA8DI3krovqQYraRUTGnXDLTH0UsP9wGgcpzwQhwWehK82iTp5eq/nRwxKA0KotT7zVpc01DrAbRn1oRXhzag==}
@@ -3425,6 +3431,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
       - typescript
+
+  '@naverpay/browserslist-config@2.0.0': {}
 
   '@naverpay/eslint-config@1.0.7(gbadlekifjsqp6j5hcgg2cfqp4)':
     dependencies:
