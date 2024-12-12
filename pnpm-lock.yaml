@@ -70,14 +70,7 @@ importers:
         specifier: ^22.10.2
         version: 22.10.2
 
-  packages/random:
-    devDependencies:
-      '@naverpay/pite':
-        specifier: workspace:*
-        version: link:../pite
-      vite:
-        specifier: ^5.4.11
-        version: 5.4.11(@types/node@22.10.2)
+  packages/random: {}
 
   packages/test:
     devDependencies:
