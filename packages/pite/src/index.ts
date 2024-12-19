@@ -11,6 +11,12 @@ export interface ViteConfigProps {
     options?: BuildOptions
 }
 
+const replaceExtension = (target: string, replacement: '.mjs' | '.js') => {
+    // .ts .jsx .tsx
+    const regex = /\.([tj]s[x]?)/
+    return target.replace(regex, replacement)
+}
+
 export function createViteConfig({formats, entry, options}: ViteConfigProps) {
     const build: BuildOptions = {
         target: browserslistToEsbuild(),
@@ -24,13 +30,31 @@ export function createViteConfig({formats, entry, options}: ViteConfigProps) {
                 {
                     dir: 'dist/esm',
                     format: 'es',
-                    entryFileNames: '[name].mjs',
+                    entryFileNames: (chunkInfo) => {
+                        const subPath = chunkInfo.facadeModuleId?.split('src')[1]
+
+                        if (subPath) {
+                            const relativePath = subPath.startsWith('/') ? subPath.slice(1) : subPath
+                            return replaceExtension(relativePath, '.mjs')
+                        }
+
+                        return `${chunkInfo.name}.mjs`
+                    },
                     preserveModules: true,
                 },
                 {
                     dir: 'dist/cjs',
                     format: 'cjs',
-                    entryFileNames: '[name].js',
+                    entryFileNames: (chunkInfo) => {
+                        const subPath = chunkInfo.facadeModuleId?.split('src')[1]
+
+                        if (subPath) {
+                            const relativePath = subPath.startsWith('/') ? subPath.slice(1) : subPath
+                            return replaceExtension(relativePath, '.js')
+                        }
+
+                        return `${chunkInfo.name}.js`
+                    },
                     preserveModules: true,
                 },
             ],
