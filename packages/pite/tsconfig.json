@@ -12,7 +12,9 @@
         "isolatedModules": true,
         "preserveWatchOutput": true,
         "skipLibCheck": true,
-        "strict": true
+        "strict": true,
+        "typeRoots": ["./node_modules/@types"],
+        "types": ["node"]
     },
     "include": ["src"],
     "exclude": ["node_modules", "dist"]

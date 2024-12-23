@@ -1,11 +1,14 @@
+import browserslist from '@naverpay/browserslist-config'
 import babel from '@rollup/plugin-babel'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import {BuildOptions, defineConfig} from 'vite'
 import dts from 'vite-plugin-dts'
 
+import {getBrowserslistConfig} from './browserslist'
 import {shouldInjectPolyfill} from './polyfill'
 
 export interface ViteConfigProps {
+    cwd: string
     formats: ('es' | 'cjs')[]
     entry: string | string[] | Record<string, string>
     options?: BuildOptions
@@ -17,9 +20,11 @@ const replaceExtension = (target: string, replacement: '.mjs' | '.js') => {
     return target.replace(regex, replacement)
 }
 
-export function createViteConfig({formats, entry, options}: ViteConfigProps) {
+export function createViteConfig({cwd, formats, entry, options}: ViteConfigProps) {
+    const browserslistConfig = getBrowserslistConfig(cwd)
+
     const build: BuildOptions = {
-        target: browserslistToEsbuild(),
+        target: browserslistToEsbuild(browserslistConfig || browserslist),
         lib: {
             formats,
             entry,
@@ -94,8 +99,5 @@ export function createViteConfig({formats, entry, options}: ViteConfigProps) {
         }),
     ]
 
-    return defineConfig({
-        build,
-        plugins,
-    })
+    return defineConfig({build, plugins})
 }
