@@ -3,6 +3,7 @@
     "author": "@NaverPayDev/frontend",
     "version": "0.0.1",
     "description": "vite 번들러 패키지 테스트",
+    "private": true,
     "sideEffects": false,
     "main": "./dist/cjs/index.js",
     "module": "./dist/esm/index.js",
