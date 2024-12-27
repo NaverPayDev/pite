@@ -90,6 +90,8 @@ export function createViteConfig({cwd, formats, entry, allowedPolyfills = [], op
 
     const plugins = [
         dts({
+            include: ['src/**/*.ts', 'src/**/*.tsx'],
+            exclude: ['**/*.bench.ts', '**/*.test.ts', 'src/**/__tests__/**'],
             outDir: ['dist/cjs', 'dist/esm'],
             beforeWriteFile: (filePath, content) => {
                 const isEsm = filePath.includes('esm')
