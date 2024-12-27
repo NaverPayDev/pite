@@ -1,10 +1,12 @@
 /** @see https://github.com/zloirock/core-js/blob/master/packages/core-js-compat/src/data.mjs */
-const Allowed = new Set<string>([
-    // 'es.array.find-last'
-])
+/**
+ *
+ * @param allowed
+ * @example ['es.array.find-last']
+ */
 
-export const shouldInjectPolyfill = (polyfill: string, shouldInject: boolean) => {
-    if (shouldInject && !Allowed.has(polyfill)) {
+export const shouldInjectPolyfill = (allowed: Set<string>) => (polyfill: string, shouldInject: boolean) => {
+    if (shouldInject && !allowed.has(polyfill)) {
         throw new Error(`Your project contains code that requires polyfills [${polyfill}]`)
     }
 
