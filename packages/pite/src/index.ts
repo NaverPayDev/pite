@@ -11,6 +11,7 @@ export interface ViteConfigProps {
     cwd: string
     formats: ('es' | 'cjs')[]
     entry: string | string[] | Record<string, string>
+    allowedPolyfills?: string[]
     options?: BuildOptions
 }
 
@@ -20,7 +21,7 @@ const replaceExtension = (target: string, replacement: '.mjs' | '.js') => {
     return target.replace(regex, replacement)
 }
 
-export function createViteConfig({cwd, formats, entry, options}: ViteConfigProps) {
+export function createViteConfig({cwd, formats, entry, allowedPolyfills = [], options}: ViteConfigProps) {
     const browserslistConfig = getBrowserslistConfig(cwd)
 
     const build: BuildOptions = {
@@ -74,7 +75,7 @@ export function createViteConfig({cwd, formats, entry, options}: ViteConfigProps
                                 method: 'usage-pure',
                                 version: '3.39.0',
                                 proposals: true,
-                                shouldInjectPolyfill,
+                                shouldInjectPolyfill: shouldInjectPolyfill(new Set(allowedPolyfills)),
                                 debug: true,
                             },
                         ],
@@ -89,6 +90,8 @@ export function createViteConfig({cwd, formats, entry, options}: ViteConfigProps
 
     const plugins = [
         dts({
+            include: ['src/**/*.ts', 'src/**/*.tsx'],
+            exclude: ['**/*.bench.ts', '**/*.test.ts', 'src/**/__tests__/**'],
             outDir: ['dist/cjs', 'dist/esm'],
             beforeWriteFile: (filePath, content) => {
                 const isEsm = filePath.includes('esm')

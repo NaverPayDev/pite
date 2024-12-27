@@ -11,7 +11,8 @@ export const testEntryPath = './src/index'
 // @ts-check
 export default createViteConfig({
     formats: ['es', 'cjs'],
-    entry: testEntryPath,
+    entry: testInputMap,
+    allowedPolyfills: ['es.array.find-last'],
     options: {
         minify: false,
     },
