@@ -1,3 +1,5 @@
+import builtins from 'builtins'
+
 import pkg from './package.json'
 import {createViteConfig} from './src/index'
 
@@ -13,7 +15,7 @@ export default createViteConfig({
     entry: 'src/index',
     options: {
         rollupOptions: {
-            external: [...deps, 'node:path', 'node:fs'],
+            external: [...deps, ...builtins()],
             output: [
                 {
                     dir: 'dist/esm',
