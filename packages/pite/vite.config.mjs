@@ -12,6 +12,7 @@ const deps = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependenc
 export default createViteConfig({
     cwd: __dirname,
     formats: ['es', 'cjs'],
+    outDir: ['dist/esm', 'dist/cjs'],
     entry: 'src/index',
     options: {
         rollupOptions: {
