@@ -1,3 +1,5 @@
+import fs from 'fs'
+
 import browserslist from '@naverpay/browserslist-config'
 import babel from '@rollup/plugin-babel'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
@@ -85,6 +87,7 @@ export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyf
         ...(options || {}),
     }
 
+    const hasEsm = !!formats?.find((format) => format === 'es')
     const plugins = [
         dts({
             include: ['src/**/*.ts', 'src/**/*.tsx'],
@@ -94,11 +97,17 @@ export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyf
             }),
             beforeWriteFile: (filePath, content) => {
                 if (outDir.length === 0) {
+                    // .d.ts 파일이 동일 경로에 존재하는데 es format이 있는 경우
+                    const isExistDTS = fs.existsSync(filePath)
+                    const isEsm = hasEsm && isExistDTS
+
+                    // format이 하나고 es인 경우
                     const isEsmOnly = formats.length === 1 && formats[0] === 'es'
-                    return {filePath: getTypeExtension(filePath, isEsmOnly), content}
+
+                    return {filePath: getTypeExtension(filePath, isEsm || isEsmOnly), content}
                 }
 
-                const isEsm = filePath.includes(esmDir)
+                const isEsm = filePath.includes(esmDir) && hasEsm
                 return {filePath: getTypeExtension(filePath, isEsm), content}
             },
         }),
