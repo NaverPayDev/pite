@@ -23,7 +23,7 @@
     },
     "scripts": {
         "clean": "rm -rf ./dist",
-        "build": "vite build",
+        "build": "pnpm run clean && vite build",
         "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
         "lint:fix": "pnpm run lint --fix",
         "prettier": "prettier --check '**/*.{json,yaml,md,ts,tsx,js,jsx}'",

@@ -7,10 +7,13 @@ import dts from 'vite-plugin-dts'
 import {getBrowserslistConfig} from './browserslist'
 import {shouldInjectPolyfill} from './polyfill'
 
+const ESM_REGEX = /\/(es|esm)/
+
 export interface ViteConfigProps {
     cwd: string
     formats: ('es' | 'cjs')[]
     entry: string | string[] | Record<string, string>
+    outDir?: string[]
     allowedPolyfills?: string[]
     options?: BuildOptions
 }
@@ -21,8 +24,14 @@ const replaceExtension = (target: string, replacement: '.mjs' | '.js') => {
     return target.replace(regex, replacement)
 }
 
-export function createViteConfig({cwd, formats, entry, allowedPolyfills = [], options}: ViteConfigProps) {
+const getTypeExtension = (filePath: string, isEsm: boolean) =>
+    isEsm ? filePath.replace('.d.ts', '.d.mts') : filePath.replace('.d.mts', '.d.ts')
+
+export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyfills = [], options}: ViteConfigProps) {
     const browserslistConfig = getBrowserslistConfig(cwd)
+
+    const esmDir = outDir?.find((outDirectory) => ESM_REGEX.test(outDirectory)) ?? 'dist'
+    const cjsDir = outDir?.find((outDirectory) => !ESM_REGEX.test(outDirectory)) ?? 'dist'
 
     const build: BuildOptions = {
         target: browserslistToEsbuild(browserslistConfig || browserslist),
@@ -32,38 +41,26 @@ export function createViteConfig({cwd, formats, entry, allowedPolyfills = [], op
         },
         rollupOptions: {
             external: (id) => /core-js-pure/.test(id),
-            output: [
-                {
-                    dir: 'dist/esm',
-                    format: 'es',
+            output: formats.map((format) => {
+                const isEsm = format === 'es'
+                const extension = isEsm ? '.mjs' : '.js'
+
+                return {
+                    dir: isEsm ? esmDir : cjsDir,
+                    format,
+                    preserveModules: true,
                     entryFileNames: (chunkInfo) => {
                         const subPath = chunkInfo.facadeModuleId?.split('src')[1]
 
                         if (subPath) {
                             const relativePath = subPath.startsWith('/') ? subPath.slice(1) : subPath
-                            return replaceExtension(relativePath, '.mjs')
+                            return replaceExtension(relativePath, extension)
                         }
 
-                        return `${chunkInfo.name}.mjs`
+                        return `${chunkInfo.name}${extension}`
                     },
-                    preserveModules: true,
-                },
-                {
-                    dir: 'dist/cjs',
-                    format: 'cjs',
-                    entryFileNames: (chunkInfo) => {
-                        const subPath = chunkInfo.facadeModuleId?.split('src')[1]
-
-                        if (subPath) {
-                            const relativePath = subPath.startsWith('/') ? subPath.slice(1) : subPath
-                            return replaceExtension(relativePath, '.js')
-                        }
-
-                        return `${chunkInfo.name}.js`
-                    },
-                    preserveModules: true,
-                },
-            ],
+                }
+            }),
             plugins: [
                 babel({
                     babelHelpers: 'runtime',
@@ -92,12 +89,17 @@ export function createViteConfig({cwd, formats, entry, allowedPolyfills = [], op
         dts({
             include: ['src/**/*.ts', 'src/**/*.tsx'],
             exclude: ['**/*.bench.ts', '**/*.test.ts', 'src/**/__tests__/**'],
-            outDir: ['dist/cjs', 'dist/esm'],
+            outDir: formats.map((format) => {
+                return format === 'es' ? esmDir : cjsDir
+            }),
             beforeWriteFile: (filePath, content) => {
-                const isEsm = filePath.includes('esm')
-                const replacedFilePath = isEsm ? filePath.replace('.d.ts', '.d.mts') : filePath
+                if (outDir.length === 0) {
+                    const isEsmOnly = formats.length === 1 && formats[0] === 'es'
+                    return {filePath: getTypeExtension(filePath, isEsmOnly), content}
+                }
 
-                return {filePath: replacedFilePath, content}
+                const isEsm = filePath.includes(esmDir)
+                return {filePath: getTypeExtension(filePath, isEsm), content}
             },
         }),
     ]
