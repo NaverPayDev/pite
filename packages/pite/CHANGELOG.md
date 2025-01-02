@@ -1,5 +1,17 @@
 # @naverpay/pite
 
+## 0.0.4
+
+### Patch Changes
+
+-   bd756c9: .browserslistrc가 없을 때 browserslist에서 발생하는 에러를 해결합니다
+
+    PR: [.browserslistrc가 없을 때 browserslist에서 발생하는 에러를 해결합니다](https://github.com/NaverPayDev/pite/pull/18)
+
+-   da5c303: outDir 옵션을 추가합니다
+
+    PR: [outDir 옵션을 추가합니다](https://github.com/NaverPayDev/pite/pull/20)
+
 ## 0.0.3
 
 ### Patch Changes
