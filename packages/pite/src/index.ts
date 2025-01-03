@@ -7,6 +7,7 @@ import {BuildOptions, defineConfig} from 'vite'
 import dts from 'vite-plugin-dts'
 
 import {getBrowserslistConfig} from './browserslist'
+import {getExternalDependencies} from './dependencies'
 import {shouldInjectPolyfill} from './polyfill'
 
 const ESM_REGEX = /\/(es|esm)/
@@ -31,6 +32,7 @@ const getTypeExtension = (filePath: string, isEsm: boolean) =>
 
 export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyfills = [], options}: ViteConfigProps) {
     const browserslistConfig = getBrowserslistConfig(cwd)
+    const externalDeps = getExternalDependencies(cwd)
 
     const esmDir = outDir?.find((outDirectory) => ESM_REGEX.test(outDirectory)) ?? 'dist'
     const cjsDir = outDir?.find((outDirectory) => !ESM_REGEX.test(outDirectory)) ?? 'dist'
@@ -42,7 +44,7 @@ export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyf
             entry,
         },
         rollupOptions: {
-            external: (id) => /core-js-pure/.test(id),
+            external: [/core-js-pure/, ...externalDeps],
             output: formats.map((format) => {
                 const isEsm = format === 'es'
                 const extension = isEsm ? '.mjs' : '.js'
