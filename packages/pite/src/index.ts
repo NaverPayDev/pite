@@ -1,6 +1,6 @@
 import fs from 'fs'
 
-import browserslist from '@naverpay/browserslist-config'
+import defaultBrowserslist from '@naverpay/browserslist-config'
 import babel from '@rollup/plugin-babel'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import {BuildOptions, defineConfig} from 'vite'
@@ -9,6 +9,7 @@ import dts from 'vite-plugin-dts'
 import {getBrowserslistConfig} from './browserslist'
 import {getExternalDependencies} from './dependencies'
 import {shouldInjectPolyfill} from './polyfill'
+import {getTypeExtension, replaceExtension} from './util'
 
 const ESM_REGEX = /\/(es|esm)/
 
@@ -20,15 +21,6 @@ export interface ViteConfigProps {
     allowedPolyfills?: string[]
     options?: BuildOptions
 }
-
-const replaceExtension = (target: string, replacement: '.mjs' | '.js') => {
-    // .ts .jsx .tsx
-    const regex = /\.([tj]s[x]?)/
-    return target.replace(regex, replacement)
-}
-
-const getTypeExtension = (filePath: string, isEsm: boolean) =>
-    isEsm ? filePath.replace('.d.ts', '.d.mts') : filePath.replace('.d.mts', '.d.ts')
 
 export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyfills = [], options}: ViteConfigProps) {
     const browserslistConfig = getBrowserslistConfig(cwd)
@@ -49,8 +41,10 @@ export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyf
     const esmDir = outDir?.find((outDirectory) => ESM_REGEX.test(outDirectory)) ?? 'dist'
     const cjsDir = outDir?.find((outDirectory) => !ESM_REGEX.test(outDirectory)) ?? 'dist'
 
+    const browserslist = browserslistConfig || defaultBrowserslist
+
     const build: BuildOptions = {
-        target: browserslistToEsbuild(browserslistConfig || browserslist),
+        target: browserslistToEsbuild(browserslist),
         lib: {
             formats,
             entry,
@@ -91,6 +85,7 @@ export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyf
                                 proposals: true,
                                 shouldInjectPolyfill: shouldInjectPolyfill(new Set(allowedPolyfills)),
                                 debug: true,
+                                targets: browserslist,
                             },
                         ],
                     ],
