@@ -17,20 +17,7 @@ export default createViteConfig({
     options: {
         rollupOptions: {
             external: [...deps, ...builtins()],
-            output: [
-                {
-                    dir: 'dist/esm',
-                    format: 'es',
-                    entryFileNames: '[name].mjs',
-                    preserveModules: true,
-                },
-                {
-                    dir: 'dist/cjs',
-                    format: 'cjs',
-                    entryFileNames: '[name].js',
-                    preserveModules: true,
-                },
-            ],
         },
+        minify: false,
     },
 })
