@@ -16,6 +16,7 @@ export interface ViteConfigProps {
     cwd: string
     formats: ('es' | 'cjs')[]
     entry: string | string[] | Record<string, string>
+    external?: string[]
     outDir?: string[]
     allowedPolyfills?: string[]
     options?: BuildOptions
@@ -30,7 +31,15 @@ const replaceExtension = (target: string, replacement: '.mjs' | '.js') => {
 const getTypeExtension = (filePath: string, isEsm: boolean) =>
     isEsm ? filePath.replace('.d.ts', '.d.mts') : filePath.replace('.d.mts', '.d.ts')
 
-export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyfills = [], options}: ViteConfigProps) {
+export function createViteConfig({
+    cwd,
+    formats,
+    entry,
+    external = [],
+    outDir = [],
+    allowedPolyfills = [],
+    options,
+}: ViteConfigProps) {
     const browserslistConfig = getBrowserslistConfig(cwd)
     const externalDeps = getExternalDependencies(cwd)
 
@@ -44,7 +53,7 @@ export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyf
             entry,
         },
         rollupOptions: {
-            external: [/core-js-pure/, ...externalDeps],
+            external: [/core-js-pure/, ...externalDeps, ...external],
             output: formats.map((format) => {
                 const isEsm = format === 'es'
                 const extension = isEsm ? '.mjs' : '.js'
