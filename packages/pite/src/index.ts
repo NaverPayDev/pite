@@ -16,7 +16,6 @@ export interface ViteConfigProps {
     cwd: string
     formats: ('es' | 'cjs')[]
     entry: string | string[] | Record<string, string>
-    external?: string[]
     outDir?: string[]
     allowedPolyfills?: string[]
     options?: BuildOptions
@@ -31,17 +30,21 @@ const replaceExtension = (target: string, replacement: '.mjs' | '.js') => {
 const getTypeExtension = (filePath: string, isEsm: boolean) =>
     isEsm ? filePath.replace('.d.ts', '.d.mts') : filePath.replace('.d.mts', '.d.ts')
 
-export function createViteConfig({
-    cwd,
-    formats,
-    entry,
-    external = [],
-    outDir = [],
-    allowedPolyfills = [],
-    options,
-}: ViteConfigProps) {
+export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyfills = [], options}: ViteConfigProps) {
     const browserslistConfig = getBrowserslistConfig(cwd)
     const externalDeps = getExternalDependencies(cwd)
+
+    const {lib: inputLib, rollupOptions: inputRollupOptions, ...restOptions} = options || {lib: {}, rollupOptions: {}}
+
+    const inputExternal = inputRollupOptions?.external || ([] as string[])
+    const external =
+        typeof inputExternal === 'function'
+            ? inputExternal
+            : Array.isArray(inputExternal)
+              ? [/core-js-pure/, ...externalDeps, ...inputExternal]
+              : [/core-js-pure/, ...externalDeps, inputExternal]
+
+    delete inputRollupOptions?.external
 
     const esmDir = outDir?.find((outDirectory) => ESM_REGEX.test(outDirectory)) ?? 'dist'
     const cjsDir = outDir?.find((outDirectory) => !ESM_REGEX.test(outDirectory)) ?? 'dist'
@@ -51,9 +54,10 @@ export function createViteConfig({
         lib: {
             formats,
             entry,
+            ...inputLib,
         },
         rollupOptions: {
-            external: [/core-js-pure/, ...externalDeps, ...external],
+            external,
             output: formats.map((format) => {
                 const isEsm = format === 'es'
                 const extension = isEsm ? '.mjs' : '.js'
@@ -94,8 +98,9 @@ export function createViteConfig({
                     exclude: /node_modules/,
                 }),
             ],
+            ...inputRollupOptions,
         },
-        ...(options || {}),
+        ...restOptions,
     }
 
     const hasEsm = !!formats?.find((format) => format === 'es')
