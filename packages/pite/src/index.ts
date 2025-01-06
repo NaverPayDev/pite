@@ -9,7 +9,7 @@ import dts from 'vite-plugin-dts'
 import {getBrowserslistConfig} from './browserslist'
 import {getExternalDependencies} from './dependencies'
 import {shouldInjectPolyfill} from './polyfill'
-import {getTypeExtension, replaceExtension} from './util'
+import {getTypeExtension, isValidBrowserslistConfig, replaceExtension} from './util'
 
 const ESM_REGEX = /\/(es|esm)/
 
@@ -50,7 +50,7 @@ export function createViteConfig({
     const esmDir = outDir?.find((outDirectory) => ESM_REGEX.test(outDirectory)) ?? 'dist'
     const cjsDir = outDir?.find((outDirectory) => !ESM_REGEX.test(outDirectory)) ?? 'dist'
 
-    const browserslist = browserslistConfig || defaultBrowserslist
+    const browserslist = isValidBrowserslistConfig(browserslistConfig) ? browserslistConfig : defaultBrowserslist
 
     const build: BuildOptions = {
         target: browserslistToEsbuild(browserslist),
