@@ -14,23 +14,11 @@ export default createViteConfig({
     formats: ['es', 'cjs'],
     outDir: ['dist/esm', 'dist/cjs'],
     entry: 'src/index',
+    ignoredPolyfills: ['esnext.json.parse'],
     options: {
         rollupOptions: {
             external: [...deps, ...builtins()],
-            output: [
-                {
-                    dir: 'dist/esm',
-                    format: 'es',
-                    entryFileNames: '[name].mjs',
-                    preserveModules: true,
-                },
-                {
-                    dir: 'dist/cjs',
-                    format: 'cjs',
-                    entryFileNames: '[name].js',
-                    preserveModules: true,
-                },
-            ],
         },
+        minify: false,
     },
 })

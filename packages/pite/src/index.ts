@@ -1,13 +1,15 @@
 import fs from 'fs'
 
-import browserslist from '@naverpay/browserslist-config'
+import defaultBrowserslist from '@naverpay/browserslist-config'
 import babel from '@rollup/plugin-babel'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import {BuildOptions, defineConfig} from 'vite'
 import dts from 'vite-plugin-dts'
 
 import {getBrowserslistConfig} from './browserslist'
+import {getExternalDependencies} from './dependencies'
 import {shouldInjectPolyfill} from './polyfill'
+import {getTypeExtension, isValidBrowserslistConfig, replaceExtension} from './util'
 
 const ESM_REGEX = /\/(es|esm)/
 
@@ -17,32 +19,48 @@ export interface ViteConfigProps {
     entry: string | string[] | Record<string, string>
     outDir?: string[]
     allowedPolyfills?: string[]
+    ignoredPolyfills?: string[]
     options?: BuildOptions
 }
 
-const replaceExtension = (target: string, replacement: '.mjs' | '.js') => {
-    // .ts .jsx .tsx
-    const regex = /\.([tj]s[x]?)/
-    return target.replace(regex, replacement)
-}
-
-const getTypeExtension = (filePath: string, isEsm: boolean) =>
-    isEsm ? filePath.replace('.d.ts', '.d.mts') : filePath.replace('.d.mts', '.d.ts')
-
-export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyfills = [], options}: ViteConfigProps) {
+export function createViteConfig({
+    cwd,
+    formats,
+    entry,
+    outDir = [],
+    allowedPolyfills = [],
+    ignoredPolyfills = [],
+    options,
+}: ViteConfigProps) {
     const browserslistConfig = getBrowserslistConfig(cwd)
+    const externalDeps = getExternalDependencies(cwd)
+
+    const {lib: inputLib, rollupOptions: inputRollupOptions, ...restOptions} = options || {lib: {}, rollupOptions: {}}
+
+    const inputExternal = inputRollupOptions?.external || ([] as string[])
+    const external =
+        typeof inputExternal === 'function'
+            ? inputExternal
+            : Array.isArray(inputExternal)
+              ? [/core-js-pure/, ...externalDeps, ...inputExternal]
+              : [/core-js-pure/, ...externalDeps, inputExternal]
+
+    delete inputRollupOptions?.external
 
     const esmDir = outDir?.find((outDirectory) => ESM_REGEX.test(outDirectory)) ?? 'dist'
     const cjsDir = outDir?.find((outDirectory) => !ESM_REGEX.test(outDirectory)) ?? 'dist'
 
+    const browserslist = isValidBrowserslistConfig(browserslistConfig) ? browserslistConfig : defaultBrowserslist
+
     const build: BuildOptions = {
-        target: browserslistToEsbuild(browserslistConfig || browserslist),
+        target: browserslistToEsbuild(browserslist),
         lib: {
             formats,
             entry,
+            ...inputLib,
         },
         rollupOptions: {
-            external: (id) => /core-js-pure/.test(id),
+            external,
             output: formats.map((format) => {
                 const isEsm = format === 'es'
                 const extension = isEsm ? '.mjs' : '.js'
@@ -74,8 +92,12 @@ export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyf
                                 method: 'usage-pure',
                                 version: '3.39.0',
                                 proposals: true,
-                                shouldInjectPolyfill: shouldInjectPolyfill(new Set(allowedPolyfills)),
+                                shouldInjectPolyfill: shouldInjectPolyfill({
+                                    allowed: new Set(allowedPolyfills),
+                                    ignored: new Set(ignoredPolyfills),
+                                }),
                                 debug: true,
+                                targets: browserslist,
                             },
                         ],
                     ],
@@ -83,8 +105,9 @@ export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyf
                     exclude: /node_modules/,
                 }),
             ],
+            ...inputRollupOptions,
         },
-        ...(options || {}),
+        ...restOptions,
     }
 
     const hasEsm = !!formats?.find((format) => format === 'es')
