@@ -19,10 +19,19 @@ export interface ViteConfigProps {
     entry: string | string[] | Record<string, string>
     outDir?: string[]
     allowedPolyfills?: string[]
+    ignoredPolyfills?: string[]
     options?: BuildOptions
 }
 
-export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyfills = [], options}: ViteConfigProps) {
+export function createViteConfig({
+    cwd,
+    formats,
+    entry,
+    outDir = [],
+    allowedPolyfills = [],
+    ignoredPolyfills = [],
+    options,
+}: ViteConfigProps) {
     const browserslistConfig = getBrowserslistConfig(cwd)
     const externalDeps = getExternalDependencies(cwd)
 
@@ -83,7 +92,10 @@ export function createViteConfig({cwd, formats, entry, outDir = [], allowedPolyf
                                 method: 'usage-pure',
                                 version: '3.39.0',
                                 proposals: true,
-                                shouldInjectPolyfill: shouldInjectPolyfill(new Set(allowedPolyfills)),
+                                shouldInjectPolyfill: shouldInjectPolyfill({
+                                    allowed: new Set(allowedPolyfills),
+                                    ignored: new Set(ignoredPolyfills),
+                                }),
                                 debug: true,
                                 targets: browserslist,
                             },
