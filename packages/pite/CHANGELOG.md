@@ -1,5 +1,13 @@
 # @naverpay/pite
 
+## 0.0.6
+
+### Patch Changes
+
+-   5ac37dc: deps, peerDeps를 기본 external로 지정합니다
+
+    PR: [deps, peerDeps를 기본 external로 지정합니다](https://github.com/NaverPayDev/pite/pull/23)
+
 ## 0.0.5
 
 ### Patch Changes
