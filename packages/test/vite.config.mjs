@@ -1,19 +1,19 @@
 import {createViteConfig} from '@naverpay/pite'
 
 export const testInputMap = {
-    index: './src/index',
-    transpile: './src/utils/transpile',
-    polyfill: './src/polyfill',
+    index: './src/index.ts',
+    transpile: './src/utils/transpile.ts',
+    polyfill: './src/polyfill.ts',
 }
 
-export const testEntryPath = './src/index'
+export const testGlobArray = ['./src/**/*.ts', '!./src/**/*.bench.ts', '!./src/**/*.test.ts']
 
 // @ts-check
 export default createViteConfig({
     formats: ['es', 'cjs'],
-    outDir: ['dist/es', 'dist/cj'],
+    outDir: ['dist/esm', 'dist/cjs'],
     cwd: '.',
-    entry: testInputMap,
+    entry: testGlobArray,
     allowedPolyfills: ['es.array.find-last'],
     options: {
         minify: false,
