@@ -32,5 +32,8 @@
     "devDependencies": {
         "@naverpay/pite": "workspace:*",
         "vite": "^5.4.11"
+    },
+    "dependencies": {
+        "tsup": "^8.3.5"
     }
 }

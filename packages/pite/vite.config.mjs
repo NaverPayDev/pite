@@ -9,11 +9,15 @@ const deps = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependenc
 ])
 
 // @ts-check
+/**
+ * 특정 entry에 대해서만 빌드가 필요하다면 './src/index.ts' 와 같이 확장자 명시해서 작성
+ * 여러 entry가 필요하면 glob 패턴으로 작성해줘야함
+ */
 export default createViteConfig({
     cwd: __dirname,
     formats: ['es', 'cjs'],
     outDir: ['dist/esm', 'dist/cjs'],
-    entry: 'src/index',
+    entry: ['./src/**/*.ts', '!./src/**/*.bench.ts', '!./src/**/*.test.ts'],
     ignoredPolyfills: ['esnext.json.parse'],
     options: {
         rollupOptions: {

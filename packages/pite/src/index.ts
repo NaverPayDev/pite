@@ -1,22 +1,21 @@
-import fs from 'fs'
-
 import defaultBrowserslist from '@naverpay/browserslist-config'
 import babel from '@rollup/plugin-babel'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import {BuildOptions, defineConfig} from 'vite'
-import dts from 'vite-plugin-dts'
 
 import {getBrowserslistConfig} from './browserslist'
 import {getExternalDependencies} from './dependencies'
+import {getViteEntry} from './getViteEntry'
 import {shouldInjectPolyfill} from './polyfill'
-import {getTypeExtension, isValidBrowserslistConfig, replaceExtension} from './util'
+import {isValidBrowserslistConfig, replaceExtension} from './util'
+import vitePluginTsup from './vie-tsup-plugin'
 
 const ESM_REGEX = /\/(es|esm)/
 
 export interface ViteConfigProps {
     cwd: string
     formats: ('es' | 'cjs')[]
-    entry: string | string[] | Record<string, string>
+    entry: string[]
     outDir?: string[]
     allowedPolyfills?: string[]
     ignoredPolyfills?: string[]
@@ -56,7 +55,7 @@ export function createViteConfig({
         target: browserslistToEsbuild(browserslist),
         lib: {
             formats,
-            entry,
+            entry: getViteEntry(entry),
             ...inputLib,
         },
         rollupOptions: {
@@ -110,31 +109,17 @@ export function createViteConfig({
         ...restOptions,
     }
 
-    const hasEsm = !!formats?.find((format) => format === 'es')
-    const plugins = [
-        dts({
-            include: ['src/**/*.ts', 'src/**/*.tsx'],
-            exclude: ['**/*.bench.ts', '**/*.test.ts', 'src/**/__tests__/**'],
-            outDir: formats.map((format) => {
-                return format === 'es' ? esmDir : cjsDir
+    return defineConfig({
+        build,
+        plugins: [
+            vitePluginTsup({
+                formats,
+                entry,
+                outDir: {
+                    esm: esmDir,
+                    cjs: cjsDir,
+                },
             }),
-            beforeWriteFile: (filePath, content) => {
-                if (outDir.length === 0) {
-                    // .d.ts 파일이 동일 경로에 존재하는데 es format이 있는 경우
-                    const isExistDTS = fs.existsSync(filePath)
-                    const isEsm = hasEsm && isExistDTS
-
-                    // format이 하나고 es인 경우
-                    const isEsmOnly = formats.length === 1 && formats[0] === 'es'
-
-                    return {filePath: getTypeExtension(filePath, isEsm || isEsmOnly), content}
-                }
-
-                const isEsm = filePath.includes(esmDir) && hasEsm
-                return {filePath: getTypeExtension(filePath, isEsm), content}
-            },
-        }),
-    ]
-
-    return defineConfig({build, plugins})
+        ],
+    })
 }
