@@ -1,10 +1,10 @@
 {
     "name": "@naverpay/pite",
-    "author": "@NaverPayDev/frontend",
+    "author": "@NaverPayDev2025/frontend",
     "private": true,
     "repository": {
         "type": "git",
-        "url": "https://github.com/NaverPayDev/pite.git"
+        "url": "https://github.com/NaverPayDev2025/pite.git"
     },
     "description": "vite 번들러 패키지",
     "keywords": [

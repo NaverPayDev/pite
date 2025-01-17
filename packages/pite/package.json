@@ -1,6 +1,6 @@
 {
     "name": "@naverpay/pite",
-    "author": "@NaverPayDev/frontend",
+    "author": "@NaverPayDev2025/frontend",
     "version": "0.0.6",
     "description": "vite 번들러 패키지",
     "main": "./dist/cjs/index.js",

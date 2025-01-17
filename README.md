@@ -1,6 +1,6 @@
 # ts-monorepo-template
 
-**@NaverPayDev/frontend**에서 제공하는 **TypeScript Monorepo Template**입니다. 이 템플릿은 Turbo, ESLint, Prettier, TypeScript와 같은 도구를 사용하여 Monorepo 프로젝트를 효율적으로 관리할 수 있도록 설계되었습니다.
+**@NaverPayDev2025/frontend**에서 제공하는 **TypeScript Monorepo Template**입니다. 이 템플릿은 Turbo, ESLint, Prettier, TypeScript와 같은 도구를 사용하여 Monorepo 프로젝트를 효율적으로 관리할 수 있도록 설계되었습니다.
 
 ---
 
@@ -36,7 +36,7 @@ pnpm -v
 1. **레포지토리 클론** 혹은 **use this template**:
 
    ```bash
-   git clone https://github.com/NaverPayDev/ts-monorepo-template.git
+   git clone https://github.com/NaverPayDev2025/ts-monorepo-template.git
    cd ts-monorepo-template
    ```
 
@@ -111,7 +111,7 @@ pnpm markdownlint:fix
 
 ## 라이선스
 
-이 템플릿은 네이버 파이낸셜 유저플랫폼 산하 공통개발TF (@NaverPayDev/frontend)에 의해 관리되며, 해당 라이선스 정책을 따릅니다.
+이 템플릿은 네이버 파이낸셜 유저플랫폼 산하 공통개발TF (@NaverPayDev2025/frontend)에 의해 관리되며, 해당 라이선스 정책을 따릅니다.
 
 ---
 

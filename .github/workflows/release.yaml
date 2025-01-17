@@ -33,7 +33,7 @@ jobs:
 
             - name: Create Release Pull Request
               id: changesets
-              uses: NaverPayDev/changeset-actions/publish@main
+              uses: NaverPayDev2025/changeset-actions/publish@main
               with:
                   github_token: ${{ secrets.ACTION_TOKEN }}
                   npm_token: ${{ secrets.NPM_TOKEN }}
