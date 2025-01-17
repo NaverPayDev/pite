@@ -1,11 +1,5 @@
 import {createViteConfig} from '@naverpay/pite'
 
-export const testInputMap = {
-    index: './src/index.ts',
-    transpile: './src/utils/transpile.ts',
-    polyfill: './src/polyfill.ts',
-}
-
 export const testGlobArray = ['./src/**/*.ts', '!./src/**/*.bench.ts', '!./src/**/*.test.ts']
 
 // @ts-check
