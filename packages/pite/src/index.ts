@@ -56,6 +56,7 @@ export function createViteConfig({
     const build: BuildOptions = {
         target: browserslistToEsbuild(browserslist),
         lib: {
+            cssFileName: cssFileName.replace('.css', ''),
             formats,
             entry: getViteEntry(entry),
             ...inputLib,
