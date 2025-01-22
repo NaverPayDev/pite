@@ -1,7 +1,7 @@
 import defaultBrowserslist from '@naverpay/browserslist-config'
 import babel from '@rollup/plugin-babel'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
-import {BuildOptions, defineConfig} from 'vite'
+import {BuildOptions, defineConfig, Plugin} from 'vite'
 
 import {getBrowserslistConfig} from './browserslist'
 import {getExternalDependencies} from './dependencies'
@@ -47,6 +47,9 @@ export function createViteConfig({
               : [/core-js-pure/, ...externalDeps, inputExternal]
 
     delete inputRollupOptions?.external
+
+    const inputRollupPlugin = (inputRollupOptions?.plugins || []) as Plugin[]
+    inputRollupOptions?.plugins && delete inputRollupOptions?.plugins
 
     const esmDir = outDir?.find((outDirectory) => ESM_REGEX.test(outDirectory)) ?? 'dist'
     const cjsDir = outDir?.find((outDirectory) => !ESM_REGEX.test(outDirectory)) ?? 'dist'
@@ -116,6 +119,7 @@ export function createViteConfig({
                     extensions: ['.js', '.jsx', '.ts', '.tsx'],
                     exclude: /node_modules/,
                 }),
+                ...inputRollupPlugin,
             ],
             ...inputRollupOptions,
         },

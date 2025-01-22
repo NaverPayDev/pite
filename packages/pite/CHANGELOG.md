@@ -1,5 +1,11 @@
 # @naverpay/pite
 
+## 0.0.10
+
+### Patch Changes
+
+-   rollup plugin option 병합 로직 수정
+
 ## 0.0.9
 
 ### Patch Changes
