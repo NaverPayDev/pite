@@ -8,9 +8,9 @@ function isGlobPattern(input: string) {
 }
 
 function getAllowGlob(globPatterns: string[]) {
-    const allowPattern = globPatterns.find((pattern) => !pattern.startsWith('!'))
+    const allowPattern = globPatterns.filter((pattern) => !pattern.startsWith('!'))
 
-    if (!allowPattern) {
+    if (allowPattern.length === 0) {
         throw new Error('올바르지 못한 glob pattern 입니다')
     }
     return allowPattern

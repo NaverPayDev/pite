@@ -16,6 +16,7 @@ export interface ViteConfigProps {
     cwd: string
     formats: ('es' | 'cjs')[]
     entry: string[]
+    cssFileName?: string
     outDir?: string[]
     allowedPolyfills?: string[]
     ignoredPolyfills?: string[]
@@ -26,6 +27,7 @@ export function createViteConfig({
     cwd,
     formats,
     entry,
+    cssFileName = 'style.css',
     outDir = [],
     allowedPolyfills = [],
     ignoredPolyfills = [],
@@ -78,6 +80,16 @@ export function createViteConfig({
 
                         return `${chunkInfo.name}${extension}`
                     },
+                    assetFileNames: (assetInfo) => {
+                        if (!assetInfo.names) {
+                            return ''
+                        }
+                        if (assetInfo.names.length > 0 && assetInfo.names[0] === 'style.css') {
+                            return cssFileName
+                        }
+
+                        return assetInfo.names[0]
+                    },
                 }
             }),
             plugins: [
@@ -109,17 +121,19 @@ export function createViteConfig({
         ...restOptions,
     }
 
+    const plugins = [
+        vitePluginTsup({
+            formats,
+            entry,
+            outDir: {
+                esm: esmDir,
+                cjs: cjsDir,
+            },
+        }),
+    ]
+
     return defineConfig({
         build,
-        plugins: [
-            vitePluginTsup({
-                formats,
-                entry,
-                outDir: {
-                    esm: esmDir,
-                    cjs: cjsDir,
-                },
-            }),
-        ],
+        plugins,
     })
 }
