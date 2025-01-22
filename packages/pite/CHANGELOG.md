@@ -1,5 +1,13 @@
 # @naverpay/pite
 
+## 0.0.9
+
+### Patch Changes
+
+-   cssFileName도 옵션 적용
+
+    PR: [cssFileName도 옵션 적용](https://github.com/NaverPayDev/pite/pull/33)
+
 ## 0.0.8
 
 ### Patch Changes
