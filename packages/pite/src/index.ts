@@ -8,7 +8,7 @@ import {getExternalDependencies} from './dependencies'
 import {getViteEntry} from './getViteEntry'
 import {shouldInjectPolyfill} from './polyfill'
 import {isValidBrowserslistConfig, replaceExtension} from './util'
-import vitePluginTsup from './vie-tsup-plugin'
+import vitePluginTsup from './vite-tsup-plugin'
 
 const ESM_REGEX = /\/(es|esm)/
 
