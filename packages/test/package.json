@@ -1,7 +1,7 @@
 {
     "name": "@naverpay/test",
     "author": "@NaverPayDev/frontend",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "vite 번들러 패키지 테스트",
     "private": true,
     "sideEffects": false,
