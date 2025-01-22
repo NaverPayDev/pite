@@ -1,5 +1,17 @@
 # @naverpay/test
 
+## 0.0.5
+
+### Patch Changes
+
+-   7d9a5df: scss를 단일 css로 묶어서 빌드하는 기능을 추가합니다
+
+    PR: [scss를 단일 css로 묶어서 빌드하는 기능을 추가합니다](https://github.com/NaverPayDev/pite/pull/31)
+
+-   94ed000: TSUP을 사용해 dts를 생성하도록 수정합니다
+
+    PR: [TSUP을 사용해 dts를 생성하도록 수정합니다](https://github.com/NaverPayDev/pite/pull/29)
+
 ## 0.0.4
 
 ### Patch Changes
