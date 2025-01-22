@@ -1,8 +1,9 @@
 {
     "compilerOptions": {
+        "jsx": "react-jsx",
         "outDir": "./dist/cjs",
         "baseUrl": "src",
-        "lib": ["ESNext"],
+        "lib": ["ESNext", "dom"],
         "composite": false,
         "declaration": true,
         "esModuleInterop": true,
@@ -10,8 +11,9 @@
         "isolatedModules": true,
         "preserveWatchOutput": true,
         "skipLibCheck": true,
-        "strict": true
+        "strict": true,
+        "moduleResolution": "node"
     },
-    "include": ["src", "test"],
+    "include": ["src", "./typings"],
     "exclude": ["node_modules", "dist"]
 }
