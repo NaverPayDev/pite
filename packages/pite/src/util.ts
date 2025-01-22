@@ -1,6 +1,6 @@
 export const replaceExtension = (target: string, replacement: '.mjs' | '.js') => {
-    // .ts .jsx .tsx
-    const regex = /\.([tj]s[x]?)/
+    // .ts .jsx .tsx .scss
+    const regex = /\.([tj]s[x]?|scss)$/
     return target.replace(regex, replacement)
 }
 

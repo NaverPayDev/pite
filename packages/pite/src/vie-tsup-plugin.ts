@@ -3,6 +3,10 @@
 import {build, Format} from 'tsup'
 import {Plugin} from 'vite'
 
+const filterCssGlob = (entry: string[]) => {
+    return entry.filter((pattern) => !pattern.includes('css'))
+}
+
 interface TsupConfigProps {
     entry: string[]
     format: Exclude<Format, 'iife'>
@@ -25,7 +29,8 @@ interface VitePluginProps {
         cjs: string
     }
 }
-export default function vitePluginTsup({formats, entry, outDir}: VitePluginProps): Plugin {
+export default function vitePluginTsup({formats, entry: rawEntry, outDir}: VitePluginProps): Plugin {
+    const entry = filterCssGlob(rawEntry)
     const hasEsm = formats.some((format) => format === 'es')
     const hasCjs = formats.some((format) => format === 'cjs')
 
