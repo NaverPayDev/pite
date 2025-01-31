@@ -1,5 +1,13 @@
 # @naverpay/pite
 
+## 0.0.11
+
+### Patch Changes
+
+-   eebd5b4: cwd에 기본값을 주입합니다
+
+    PR: [cwd에 기본값을 주입합니다](https://github.com/NaverPayDev/pite/pull/39)
+
 ## 0.0.10
 
 ### Patch Changes
