@@ -1,35 +1,70 @@
 {
     "name": "@naverpay/pite",
     "author": "@NaverPayDev/frontend",
-    "private": true,
+    "version": "0.0.11",
+    "description": "A Vite bundler package for libraries",
+    "main": "./dist/cjs/index.js",
+    "module": "./dist/esm/index.mjs",
+    "types": "./dist/cjs/index.d.ts",
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./dist/esm/index.d.mts",
+                "default": "./dist/esm/index.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/index.d.ts",
+                "default": "./dist/cjs/index.js"
+            }
+        },
+        "./package.json": "./package.json"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/NaverPayDev/pite.git"
     },
-    "description": "vite 번들러 패키지",
     "keywords": [
         "naver",
         "naverpay",
         "naver financial",
-        "vite"
+        "vite",
+        "libraries"
+    ],
+    "files": [
+        "dist"
     ],
     "scripts": {
-        "start": "turbo run start",
-        "build": "turbo run build",
-        "test": "turbo run test",
+        "clean": "rm -rf ./dist",
+        "prepublish": "cp package.json dist/ && cp README.md dist/ && node scripts/replace.mjs",
+        "build:dts": "tsup",
+        "build": "pnpm run clean && vite build",
         "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
         "lint:fix": "pnpm run lint --fix",
         "prettier": "prettier --check '**/*.{json,yaml,md,ts,tsx,js,jsx}'",
         "prettier:fix": "prettier --write '**/*.{json,yaml,md,ts,tsx,js,jsx}'",
         "markdownlint": "markdownlint '**/*.md' '#.changeset' '#**/CHANGELOG.md'",
         "markdownlint:fix": "markdownlint --fix '**/*.md' '#.changeset' '#**/CHANGELOG.md'",
-        "clean": "turbo run clean && rm -rf ./node_modules && pnpm i",
         "release:canary": "pnpm run build && changeset publish --no-git-tag --directory dist",
         "release": "pnpm run build && changeset publish --directory dist"
     },
     "lint-staged": {
         "**/*.{json,yaml,md,ts,tsx,js,jsx}": "prettier --check",
         "**/*.{ts,tsx,js,jsx}": "eslint"
+    },
+    "dependencies": {
+        "@babel/plugin-transform-runtime": "^7.25.9",
+        "@naverpay/browserslist-config": "^2.0.0",
+        "@rollup/plugin-babel": "^6.0.4",
+        "babel-plugin-polyfill-corejs3": "^0.11.0",
+        "browserslist": "^4.24.2",
+        "browserslist-to-esbuild": "^2.1.1",
+        "cosmiconfig": "^9.0.0",
+        "glob": "^11.0.1",
+        "sass-embedded": "^1.83.4"
+    },
+    "peerDependencies": {
+        "tsup": ">=8.3.5",
+        "vite": ">=6.0.10"
     },
     "devDependencies": {
         "eslint": "^8.57.0",
@@ -39,8 +74,9 @@
         "@naverpay/prettier-config": "^1.0.0",
         "lefthook": "^1.8.2",
         "lint-staged": "^15.2.10",
-        "turbo": "^2.2.3",
-        "typescript": "^5.6.3"
+        "typescript": "^5.6.3",
+        "@types/node": "^22.10.2",
+        "builtins": "^5.1.0"
     },
     "packageManager": "pnpm@9.12.3",
     "engines": {
