@@ -15,9 +15,11 @@ const deps = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependenc
  */
 export default createViteConfig({
     cwd: __dirname,
-    formats: ['es', 'cjs'],
-    outDir: ['dist/esm', 'dist/cjs'],
     entry: ['./src/**/*.ts', '!./src/**/*.bench.ts', '!./src/**/*.test.ts'],
+    outputs: [
+        {format: 'es', dir: 'dist/esm'},
+        {format: 'cjs', dir: 'dist/cjs'},
+    ],
     ignoredPolyfills: ['esnext.json.parse'],
     options: {
         rollupOptions: {
