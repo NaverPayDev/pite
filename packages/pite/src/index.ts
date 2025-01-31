@@ -13,7 +13,7 @@ import vitePluginTsup from './vite-tsup-plugin'
 const ESM_REGEX = /\/(es|esm)/
 
 export interface ViteConfigProps {
-    cwd: string
+    cwd?: string
     formats: ('es' | 'cjs')[]
     entry: string[]
     cssFileName?: string
@@ -24,7 +24,7 @@ export interface ViteConfigProps {
 }
 
 export function createViteConfig({
-    cwd,
+    cwd = '.',
     formats,
     entry,
     cssFileName = 'style.css',
