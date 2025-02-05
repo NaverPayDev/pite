@@ -1,6 +1,7 @@
 import defaultBrowserslist from '@naverpay/browserslist-config'
 import babel from '@rollup/plugin-babel'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
+import preserveDirectives from 'rollup-plugin-preserve-directives'
 import {BuildOptions, defineConfig, Plugin} from 'vite'
 
 import {getBrowserslistConfig} from './browserslist'
@@ -120,6 +121,7 @@ export function createViteConfig({
                     extensions: ['.js', '.jsx', '.ts', '.tsx'],
                     exclude: /node_modules/,
                 }),
+                preserveDirectives(),
                 ...inputRollupPlugin,
             ],
             ...inputRollupOptions,
