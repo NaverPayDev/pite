@@ -3,18 +3,18 @@
     "author": "@NaverPayDev/frontend",
     "version": "0.0.11",
     "description": "A Vite bundler package for libraries",
-    "main": "./dist/cjs/index.js",
-    "module": "./dist/esm/index.mjs",
-    "types": "./dist/cjs/index.d.ts",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
     "exports": {
         ".": {
             "import": {
-                "types": "./dist/esm/index.d.mts",
-                "default": "./dist/esm/index.mjs"
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
             },
             "require": {
-                "types": "./dist/cjs/index.d.ts",
-                "default": "./dist/cjs/index.js"
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
             }
         },
         "./package.json": "./package.json"
@@ -60,6 +60,7 @@
         "browserslist-to-esbuild": "^2.1.1",
         "cosmiconfig": "^9.0.0",
         "glob": "^11.0.1",
+        "rollup-plugin-preserve-directives": "^0.4.0",
         "sass-embedded": "^1.83.4"
     },
     "peerDependencies": {
@@ -67,16 +68,16 @@
         "vite": ">=6.0.10"
     },
     "devDependencies": {
-        "eslint": "^8.57.0",
         "@changesets/cli": "^2.27.9",
         "@naverpay/eslint-config": "^1.0.7",
         "@naverpay/markdown-lint": "^0.0.3",
         "@naverpay/prettier-config": "^1.0.0",
+        "@types/node": "^22.10.2",
+        "builtins": "^5.1.0",
+        "eslint": "^8.57.0",
         "lefthook": "^1.8.2",
         "lint-staged": "^15.2.10",
-        "typescript": "^5.6.3",
-        "@types/node": "^22.10.2",
-        "builtins": "^5.1.0"
+        "typescript": "^5.6.3"
     },
     "packageManager": "pnpm@9.12.3",
     "engines": {
