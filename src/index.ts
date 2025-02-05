@@ -10,14 +10,11 @@ import {shouldInjectPolyfill} from './polyfill'
 import {isValidBrowserslistConfig, replaceExtension} from './util'
 import vitePluginTsup from './vite-tsup-plugin'
 
-const ESM_REGEX = /\/(es|esm)/
-
 export interface ViteConfigProps {
     cwd?: string
-    formats: ('es' | 'cjs')[]
     entry: string[]
     cssFileName?: string
-    outDir?: string[]
+    outputs?: {format: 'es' | 'cjs'; dist: string}[]
     allowedPolyfills?: string[]
     ignoredPolyfills?: string[]
     options?: BuildOptions
@@ -25,10 +22,12 @@ export interface ViteConfigProps {
 
 export function createViteConfig({
     cwd = '.',
-    formats,
     entry,
+    outputs = [
+        {format: 'es', dist: 'dist/esm'},
+        {format: 'cjs', dist: 'dist/cjs'},
+    ],
     cssFileName = 'style.css',
-    outDir = [],
     allowedPolyfills = [],
     ignoredPolyfills = [],
     options,
@@ -51,8 +50,10 @@ export function createViteConfig({
     const inputRollupPlugin = (inputRollupOptions?.plugins || []) as Plugin[]
     inputRollupOptions?.plugins && delete inputRollupOptions?.plugins
 
-    const esmDir = outDir?.find((outDirectory) => ESM_REGEX.test(outDirectory)) ?? 'dist'
-    const cjsDir = outDir?.find((outDirectory) => !ESM_REGEX.test(outDirectory)) ?? 'dist'
+    const formats = outputs.map(({format}) => format)
+
+    const esmDir = outputs?.find(({format}) => format === 'es')?.dist ?? 'dist'
+    const cjsDir = outputs?.find(({format}) => format === 'cjs')?.dist ?? 'dist'
 
     const browserslist = isValidBrowserslistConfig(browserslistConfig) ? browserslistConfig : defaultBrowserslist
 

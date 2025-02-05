@@ -36,10 +36,12 @@ import { createViteConfig } from '@naverpay/pite'
 
 export default createViteConfig({
     cwd: process.cwd(), // Set working directory
-    formats: ['es', 'cjs'], // Output formats
     entry: ['src/index.ts'], // Entry files
+    outputs: [
+        { format: 'es', dist: 'dist/es' }, // ESM output directory
+        { format: 'cjs', dist: 'dist/cjs' }, // CJS output directory
+    ],
     cssFileName: 'style.css', // CSS file output name
-    outDir: ['dist/es', 'dist/cjs'], // Output directories
     allowedPolyfills: ['fetch', 'Promise'], // Specify allowed polyfills
     ignoredPolyfills: ['Symbol'], // Specify ignored polyfills
     options: {
@@ -61,16 +63,15 @@ This will generate the output files in the `dist/es` and `dist/cjs` directories.
 
 ## Configuration Options
 
-| Option               | Type                   | Description |
-|----------------------|----------------------|-------------|
-| `cwd`               | `string`              | The current working directory (default: `'.'`). |
-| `formats`           | `('es' | 'cjs')[]`    | Specifies the output formats. |
-| `entry`             | `string[]`            | The entry file(s) for the library. |
-| `cssFileName`       | `string`              | The name of the output CSS file. |
-| `outDir`            | `string[]`            | The output directory paths. |
-| `allowedPolyfills`  | `string[]`            | List of allowed polyfills for injection. |
-| `ignoredPolyfills`  | `string[]`            | List of ignored polyfills. |
-| `options`           | `BuildOptions`        | Additional Vite build options. |
+| Option               | Type                                       | Description |
+|----------------------|------------------------------------------|-------------|
+| `cwd`               | `string`                                  | The current working directory (default: `'.'`). |
+| `entry`             | `string[]`                                | The entry file(s) for the library. |
+| `outputs`           | `{format: 'es' \| 'cjs'; dist: string}[]` | Specifies the output formats and their respective directories. |
+| `cssFileName`       | `string`                                  | The name of the output CSS file. |
+| `allowedPolyfills`  | `string[]`                                | List of allowed polyfills for injection. |
+| `ignoredPolyfills`  | `string[]`                                | List of ignored polyfills. |
+| `options`           | `BuildOptions`                            | Additional Vite build options. |
 
 ## External Dependencies
 
@@ -82,4 +83,4 @@ The `createViteConfig` function automatically detects external dependencies from
 
 ## License
 
-MIT License © 2025 Naver Pay
+MIT License © 2025 NaverPay
