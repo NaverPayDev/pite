@@ -1,5 +1,19 @@
 # @naverpay/pite
 
+## 1.0.0
+
+### Major Changes
+
+-   9c1ce2f: [공통] 초기버전 개발 완료로 monorepo를 제거합니다.
+
+    PR: [[공통] 초기버전 개발 완료로 monorepo를 제거합니다.](https://github.com/NaverPayDev/pite/pull/43)
+
+### Patch Changes
+
+-   0a93b21: directive 플러그인 추가
+
+    PR: [directive 플러그인 추가](https://github.com/NaverPayDev/pite/pull/46)
+
 ## 0.0.11
 
 ### Patch Changes
