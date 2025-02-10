@@ -1,14 +1,26 @@
 /* eslint-disable no-console */
-import {exec} from 'child_process'
+import {spawnSync} from 'child_process'
 
-const publint = () => {
+import {verifyPackageJSON} from '@naverpay/publint'
+import chalk from 'chalk'
+
+interface PublintOption {
+    cwd: string
+}
+
+const publint = ({cwd}: PublintOption) => {
     return {
         name: 'rollup-plugin-publint',
         buildStart() {
-            exec(`npx @naverpay/publint`, (_, stdout, stderr) => {
-                stdout && console.log('\x1b[34m%s\x1b[0m', '[publint]', stdout)
-                stderr && console.log('\x1b[31m%s\x1b[0m', '[publint]', stderr)
-            })
+            console.log(chalk.blue('\n[publint-before-build]'))
+            try {
+                verifyPackageJSON(cwd)
+                console.log(chalk.yellow('Publint passed with no issues before build.'))
+            } catch {}
+        },
+        closeBundle() {
+            console.log(chalk.blue('\n[publint-after-build]'))
+            spawnSync('npx', ['publint'], {stdio: 'inherit'})
         },
     }
 }

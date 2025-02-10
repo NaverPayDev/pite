@@ -124,7 +124,7 @@ export function createViteConfig({
                 }),
                 preserveDirectives(),
                 ...inputRollupPlugin,
-                publint(),
+                publint({cwd}),
             ],
             ...inputRollupOptions,
         },
