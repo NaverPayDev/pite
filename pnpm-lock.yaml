@@ -26,6 +26,9 @@ importers:
       browserslist-to-esbuild:
         specifier: ^2.1.1
         version: 2.1.1(browserslist@4.24.2)
+      chalk:
+        specifier: ^5.4.1
+        version: 5.4.1
       cosmiconfig:
         specifier: ^9.0.0
         version: 9.0.0(typescript@5.6.3)
@@ -99,6 +102,9 @@ importers:
       browserslist-to-esbuild:
         specifier: ^2.1.1
         version: 2.1.1(browserslist@4.24.2)
+      chalk:
+        specifier: ^5.4.1
+        version: 5.4.1
       cosmiconfig:
         specifier: ^9.0.0
         version: 9.0.0(typescript@5.7.2)
@@ -118,21 +124,6 @@ importers:
       builtins:
         specifier: ^5.1.0
         version: 5.1.0
-
-  packages/test:
-    devDependencies:
-      '@naverpay/pite':
-        specifier: workspace:*
-        version: link:../..
-      '@naverpay/publint':
-        specifier: ^0.0.2
-        version: 0.0.2
-      publint:
-        specifier: ^0.3.2
-        version: 0.3.4
-      vite:
-        specifier: ^5.4.11
-        version: 5.4.14(@types/node@22.10.2)(sass-embedded@1.83.4)
 
 packages:
 
@@ -749,10 +740,6 @@ packages:
     peerDependencies:
       prettier: ^2.8.8 || ^3.0.0
 
-  '@naverpay/publint@0.0.2':
-    resolution: {integrity: sha512-YdiaitIe1uuRYZOpTJYxi5ppOKZHyxmSWCmX/uVRUbqYpCW444NB8LsyMw0a8n/byXoKShZn9PJebs9i1lCITA==}
-    hasBin: true
-
   '@naverpay/publint@0.0.3':
     resolution: {integrity: sha512-Xk6LVyejTHij5HfdSm4Vhis/23YAFOJ2Ls5yjTKZ3i7k5mFuMHM8iudVWP+cF2SzrNQ+7LcYTlDtvCTB7dDvpg==}
     hasBin: true
@@ -1284,6 +1271,10 @@ packages:
 
   chalk@5.3.0:
     resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+
+  chalk@5.4.1:
+    resolution: {integrity: sha512-zgVZuo2WcZgfUEmsn6eO3kINexW8RAE4maiQ8QNs8CtpPCSyMiYsULR3HQYkm3w8FIA3SberyMJMSldGsW+U3w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
   chardet@0.7.0:
@@ -3544,7 +3535,7 @@ snapshots:
       '@babel/traverse': 7.25.9
       '@babel/types': 7.26.0
       convert-source-map: 2.0.0
-      debug: 4.3.7
+      debug: 4.4.0
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -4192,10 +4183,6 @@ snapshots:
     dependencies:
       prettier: 3.3.3
 
-  '@naverpay/publint@0.0.2':
-    dependencies:
-      meow: 13.2.0
-
   '@naverpay/publint@0.0.3':
     dependencies:
       meow: 13.2.0
@@ -4385,7 +4372,7 @@ snapshots:
       '@typescript-eslint/types': 8.14.0
       '@typescript-eslint/typescript-estree': 8.14.0(typescript@5.6.3)
       '@typescript-eslint/visitor-keys': 8.14.0
-      debug: 4.3.7
+      debug: 4.4.0
       eslint: 8.57.1
     optionalDependencies:
       typescript: 5.6.3
@@ -4401,7 +4388,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/typescript-estree': 8.14.0(typescript@5.6.3)
       '@typescript-eslint/utils': 8.14.0(eslint@8.57.1)(typescript@5.6.3)
-      debug: 4.3.7
+      debug: 4.4.0
       ts-api-utils: 1.4.0(typescript@5.6.3)
     optionalDependencies:
       typescript: 5.6.3
@@ -4417,7 +4404,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 7.18.0
       '@typescript-eslint/visitor-keys': 7.18.0
-      debug: 4.3.7
+      debug: 4.4.0
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.5
@@ -4432,7 +4419,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.14.0
       '@typescript-eslint/visitor-keys': 8.14.0
-      debug: 4.3.7
+      debug: 4.4.0
       fast-glob: 3.3.2
       is-glob: 4.0.3
       minimatch: 9.0.5
@@ -4751,6 +4738,8 @@ snapshots:
       supports-color: 7.2.0
 
   chalk@5.3.0: {}
+
+  chalk@5.4.1: {}
 
   chardet@0.7.0: {}
 
@@ -5247,7 +5236,7 @@ snapshots:
       '@es-joy/jsdoccomment': 0.46.0
       are-docs-informative: 0.0.2
       comment-parser: 1.4.1
-      debug: 4.3.7
+      debug: 4.4.0
       escape-string-regexp: 4.0.0
       eslint: 8.57.1
       espree: 10.3.0
