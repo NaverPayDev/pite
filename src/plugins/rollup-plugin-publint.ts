@@ -1,26 +1,65 @@
 /* eslint-disable no-console */
-import {spawnSync} from 'child_process'
 
-import {verifyPackageJSON} from '@naverpay/publint'
+import fs from 'node:fs'
+import path from 'node:path'
+
+import {verifyPackageJSON as publintBeforeBuild} from '@naverpay/publint'
 import chalk from 'chalk'
+import {publint as publintAfterBuild} from 'publint'
+import {formatMessage} from 'publint/utils'
+import {Plugin} from 'vite'
 
 interface PublintOption {
     cwd: string
 }
 
-const publint = ({cwd}: PublintOption) => {
+const publint = ({cwd}: PublintOption): Plugin => {
+    let hasBuildStartError = false
+
     return {
         name: 'rollup-plugin-publint',
         buildStart() {
-            console.log(chalk.blue('\n[publint-before-build]'))
+            console.log(chalk.blue('\n[🔨 publint-before-build]'))
             try {
-                verifyPackageJSON(cwd)
-                console.log(chalk.green('Publint passed with no issues before build.'))
-            } catch {}
+                publintBeforeBuild(cwd)
+                console.log(chalk.green('All good!\n'))
+            } catch {
+                hasBuildStartError = true
+                console.log('\n')
+                process.exit(1)
+            }
         },
-        closeBundle() {
-            console.log(chalk.blue('\n[publint-after-build]'))
-            spawnSync('npx', ['publint', cwd], {stdio: 'inherit'})
+        async closeBundle() {
+            if (hasBuildStartError) {
+                return
+            }
+
+            let hasBuildEndError = false
+            const pkg = JSON.parse(fs.readFileSync(path.join(cwd, 'package.json'), 'utf8'))
+            const {messages} = await publintAfterBuild({pkgDir: cwd})
+
+            if (messages.length === 0) {
+                console.log(chalk.blue('\n[🔨 publint-after-build]'))
+                console.log(chalk.green('All good!\n'))
+                return
+            }
+
+            console.log(chalk.blue('\n[🔨 publint-after-build]'))
+            for (const message of messages) {
+                const hasError = message.type === 'error'
+
+                if (hasError) {
+                    hasBuildEndError = true
+                }
+
+                console.log(
+                    `- [${hasError ? chalk.red(message.type) : chalk.yellow(message.type)}] ${formatMessage(message, pkg)}`,
+                )
+            }
+            if (hasBuildEndError) {
+                console.log('\n')
+                process.exit(1)
+            }
         },
     }
 }
