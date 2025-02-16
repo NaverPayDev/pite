@@ -29,37 +29,40 @@ const publint = ({cwd}: PublintOption): Plugin => {
                 process.exit(1)
             }
         },
-        async closeBundle() {
-            if (hasBuildStartError) {
-                return
-            }
-
-            let hasBuildEndError = false
-            const pkg = JSON.parse(fs.readFileSync(path.join(cwd, 'package.json'), 'utf8'))
-            const {messages} = await publintAfterBuild({pkgDir: cwd})
-
-            if (messages.length === 0) {
-                console.log(chalk.blue('\n[🔨 publint-after-build]'))
-                console.log(chalk.green('All good!\n'))
-                return
-            }
-
-            console.log(chalk.blue('\n[🔨 publint-after-build]'))
-            for (const message of messages) {
-                const hasError = message.type === 'error'
-
-                if (hasError) {
-                    hasBuildEndError = true
+        closeBundle: {
+            handler: async () => {
+                if (hasBuildStartError) {
+                    return
                 }
 
-                console.log(
-                    `- [${hasError ? chalk.red(message.type) : chalk.yellow(message.type)}] ${formatMessage(message, pkg)}`,
-                )
-            }
-            if (hasBuildEndError) {
-                console.log('\n')
-                process.exit(1)
-            }
+                let hasBuildEndError = false
+                const pkg = JSON.parse(fs.readFileSync(path.join(cwd, 'package.json'), 'utf8'))
+                const {messages} = await publintAfterBuild({pkgDir: cwd})
+
+                if (messages.length === 0) {
+                    console.log(chalk.blue('\n[🔨 publint-after-build]'))
+                    console.log(chalk.green('All good!\n'))
+                    return
+                }
+
+                console.log(chalk.blue('\n[🔨 publint-after-build]'))
+                for (const message of messages) {
+                    const hasError = message.type === 'error'
+
+                    if (hasError) {
+                        hasBuildEndError = true
+                    }
+
+                    console.log(
+                        `- [${hasError ? chalk.red(message.type) : chalk.yellow(message.type)}] ${formatMessage(message, pkg)}`,
+                    )
+                }
+                if (hasBuildEndError) {
+                    console.log('\n')
+                    process.exit(1)
+                }
+            },
+            sequential: true,
         },
     }
 }
