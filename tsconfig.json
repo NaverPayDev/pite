@@ -3,7 +3,7 @@
         "outDir": "./dist/cjs",
         "baseUrl": "src",
         "target": "ESNext",
-        "module": "CommonJS",
+        "module": "preserve",
         "lib": ["ESNext"],
         "composite": false,
         "declaration": true,
@@ -14,7 +14,8 @@
         "skipLibCheck": true,
         "strict": true,
         "typeRoots": ["./node_modules/@types"],
-        "types": ["node"]
+        "types": ["node"],
+        "moduleResolution": "bundler"
     },
     "include": ["src"],
     "exclude": ["node_modules", "dist"]
