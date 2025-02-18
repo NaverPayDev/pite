@@ -7,6 +7,7 @@ import {BuildOptions, defineConfig, Plugin} from 'vite'
 import {getBrowserslistConfig} from './browserslist'
 import {getExternalDependencies} from './dependencies'
 import {getViteEntry} from './getViteEntry'
+import publint from './plugins/rollup-plugin-publint'
 import {shouldInjectPolyfill} from './polyfill'
 import {isValidBrowserslistConfig, replaceExtension} from './util'
 import vitePluginTsup from './vite-tsup-plugin'
@@ -123,6 +124,7 @@ export function createViteConfig({
                 }),
                 preserveDirectives(),
                 ...inputRollupPlugin,
+                publint({cwd}),
             ],
             ...inputRollupOptions,
         },

@@ -54,12 +54,15 @@
     "dependencies": {
         "@babel/plugin-transform-runtime": "^7.25.9",
         "@naverpay/browserslist-config": "^2.0.0",
+        "@naverpay/publint": "^0.0.5",
         "@rollup/plugin-babel": "^6.0.4",
         "babel-plugin-polyfill-corejs3": "^0.11.0",
         "browserslist": "^4.24.2",
         "browserslist-to-esbuild": "^2.1.1",
+        "chalk": "^5.4.1",
         "cosmiconfig": "^9.0.0",
         "glob": "^11.0.1",
+        "publint": "^0.3.4",
         "rollup-plugin-preserve-directives": "^0.4.0",
         "sass-embedded": "^1.83.4"
     },
@@ -83,5 +86,6 @@
     "engines": {
         "node": "22.11.0",
         "pnpm": "9.12.3"
-    }
+    },
+    "sideEffects": false
 }
