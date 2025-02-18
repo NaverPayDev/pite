@@ -1,5 +1,13 @@
 # @naverpay/pite
 
+## 1.1.0
+
+### Minor Changes
+
+-   d9bcad0: publint 추가
+
+    PR: [publint 추가](https://github.com/NaverPayDev/pite/pull/48)
+
 ## 1.0.0
 
 ### Major Changes
