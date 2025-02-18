@@ -15,8 +15,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       '@naverpay/publint':
-        specifier: ^0.0.4
-        version: 0.0.4
+        specifier: ^0.0.5
+        version: 0.0.5
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.26.0)(rollup@4.27.4)
@@ -562,8 +562,8 @@ packages:
     peerDependencies:
       prettier: ^2.8.8 || ^3.0.0
 
-  '@naverpay/publint@0.0.4':
-    resolution: {integrity: sha512-1FHNCFq3zcjs48kivVI7PRTbOkrkmo2Qp2z2jM/JdNWs58k59smLNJE+bOA/+sDHg4fsomCT3J8O2CLioL8anA==}
+  '@naverpay/publint@0.0.5':
+    resolution: {integrity: sha512-8mv5O+DgC/0YKnMPYqL47ec9/A8ZpjMLOd9KrZ5izLfLPdKAsyGOV0nc136FzZNB4EKtWpmerxulN9buauztow==}
     hasBin: true
 
   '@next/eslint-plugin-next@15.0.3':
@@ -3793,7 +3793,7 @@ snapshots:
     dependencies:
       prettier: 3.3.3
 
-  '@naverpay/publint@0.0.4':
+  '@naverpay/publint@0.0.5':
     dependencies:
       meow: 13.2.0
 
