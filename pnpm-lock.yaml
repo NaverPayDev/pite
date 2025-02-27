@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@babel/plugin-syntax-import-attributes':
+        specifier: ^7.26.0
+        version: 7.26.0(@babel/core@7.26.0)
       '@babel/plugin-transform-runtime':
         specifier: ^7.25.9
         version: 7.25.9(@babel/core@7.26.0)
@@ -233,6 +236,12 @@ packages:
     resolution: {integrity: sha512-cumfXOF0+nzZrrN8Rf0t7M+tF6sZc7vhQwYQck9q1/5w2OExlD+b4v4RpMJFaV1Z7WcDRgO6FqvxqxGlwo+RHQ==}
     engines: {node: '>=6.9.0'}
     deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-class-properties instead.
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+
+  '@babel/plugin-syntax-import-attributes@7.26.0':
+    resolution: {integrity: sha512-e2dttdsJ1ZTpi3B9UYGLw41hifAubg19AtCu/2I/F1QNVclOBr1dYpTdmdyZ84Xiz43BS/tCUkMAZNLv12Pi+A==}
+    engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
@@ -3393,6 +3402,11 @@ snapshots:
       '@babel/helper-plugin-utils': 7.25.9
     transitivePeerDependencies:
       - supports-color
+
+  '@babel/plugin-syntax-import-attributes@7.26.0(@babel/core@7.26.0)':
+    dependencies:
+      '@babel/core': 7.26.0
+      '@babel/helper-plugin-utils': 7.25.9
 
   '@babel/plugin-syntax-jsx@7.25.9(@babel/core@7.26.0)':
     dependencies:

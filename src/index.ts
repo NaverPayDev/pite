@@ -106,6 +106,7 @@ export function createViteConfig({
                 babel({
                     babelHelpers: 'runtime',
                     plugins: [
+                        ['@babel/plugin-syntax-import-attributes'],
                         ['@babel/plugin-transform-runtime'],
                         [
                             'babel-plugin-polyfill-corejs3',
@@ -146,6 +147,11 @@ export function createViteConfig({
     ]
 
     return defineConfig({
+        esbuild: {
+            supported: {
+                'import-assertions': true,
+            },
+        },
         build,
         plugins,
     })

@@ -52,6 +52,7 @@
         "**/*.{ts,tsx,js,jsx}": "eslint"
     },
     "dependencies": {
+        "@babel/plugin-syntax-import-attributes": "^7.26.0",
         "@babel/plugin-transform-runtime": "^7.25.9",
         "@naverpay/browserslist-config": "^2.0.0",
         "@naverpay/publint": "^0.0.5",
