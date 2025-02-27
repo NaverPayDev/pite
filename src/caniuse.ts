@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import {readFile} from 'fs/promises'
 
+import chalk from 'chalk'
+
 export async function getCaniuseLiteVersion() {
     try {
         const packageJsonUrl = import.meta.resolve('browserslist/package.json')
@@ -10,9 +12,8 @@ export async function getCaniuseLiteVersion() {
         const caniuseVersion = browserslistInfo.dependencies['caniuse-lite'].replace('^', '')
         const caniuseUrl = `https://unpkg.com/browse/caniuse-lite@${caniuseVersion}/`
 
-        console.log('\n\x1b[35mpite에서 사용중인 caniuse-lite 버전 : ', caniuseVersion)
-        console.log(`\n\x1b[35m${caniuseUrl}`, '\n')
-    } catch {
-        console.error('browserslist 패키지를 찾을 수 없습니다.')
+        console.log(chalk.magenta(`\ncurrent caniuse-lite version : ${caniuseVersion}\n${caniuseUrl}\n`))
+    } catch (error) {
+        console.error('cannot found browserslist version', error)
     }
 }
