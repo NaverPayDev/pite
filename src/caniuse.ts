@@ -3,7 +3,7 @@ import {readFile} from 'fs/promises'
 
 import chalk from 'chalk'
 
-export async function getCaniuseLiteVersion() {
+export async function printCaniuseLiteVersion() {
     try {
         const packageJsonUrl = import.meta.resolve('browserslist/package.json')
         const packageJsonPath = new URL(packageJsonUrl).pathname

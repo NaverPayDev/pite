@@ -4,8 +4,8 @@ import browserslistToEsbuild from 'browserslist-to-esbuild'
 import preserveDirectives from 'rollup-plugin-preserve-directives'
 import {BuildOptions, defineConfig, Plugin} from 'vite'
 
-import {getBrowserslistConfig} from './browserslist'
-import {getCaniuseLiteVersion} from './caniuse'
+import {getBrowserslistConfig} from './browserslistConfig'
+import {printCaniuseLiteVersion} from './caniuse'
 import {getExternalDependencies} from './dependencies'
 import {getViteEntry} from './getViteEntry'
 import publint from './plugins/rollup-plugin-publint'
@@ -60,7 +60,7 @@ export function createViteConfig({
 
     const browserslist = isValidBrowserslistConfig(browserslistConfig) ? browserslistConfig : defaultBrowserslist
 
-    getCaniuseLiteVersion()
+    printCaniuseLiteVersion()
 
     const build: BuildOptions = {
         target: browserslistToEsbuild(browserslist),
