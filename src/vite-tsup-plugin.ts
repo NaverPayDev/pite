@@ -3,8 +3,10 @@
 import {build, Format} from 'tsup'
 import {Plugin} from 'vite'
 
-const filterCssGlob = (entry: string[]) => {
-    return entry.filter((pattern) => !pattern.includes('css'))
+// css, .js, .jsx를 필터링합니다
+const filterEntry = (entry: string[]) => {
+    const excludeExts = ['.css', '.js', '.jsx']
+    return entry.filter((pattern) => !excludeExts.some((exts) => pattern.includes(exts)))
 }
 
 interface TsupConfigProps {
@@ -30,9 +32,14 @@ interface VitePluginProps {
     }
 }
 export default function vitePluginTsup({formats, entry: rawEntry, outDir}: VitePluginProps): Plugin {
-    const entry = filterCssGlob(rawEntry)
+    const entry = filterEntry(rawEntry)
+
     const hasEsm = formats.some((format) => format === 'es')
     const hasCjs = formats.some((format) => format === 'cjs')
+
+    if (entry.length === 0) {
+        return {name: 'vite-plugin-tsup'}
+    }
 
     return {
         name: 'vite-plugin-tsup',
