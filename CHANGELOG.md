@@ -1,5 +1,13 @@
 # @naverpay/pite
 
+## 1.1.3
+
+### Patch Changes
+
+-   e5b82f0: [공통] entry 를 확장할 수 있도록 수정합니다.
+
+    PR: [[공통] entry 를 확장할 수 있도록 수정합니다.](https://github.com/NaverPayDev/pite/pull/59)
+
 ## 1.1.2
 
 ### Patch Changes
