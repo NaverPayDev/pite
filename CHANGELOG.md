@@ -1,5 +1,13 @@
 # @naverpay/pite
 
+## 1.1.2
+
+### Patch Changes
+
+-   1fdb575: tsup log에 색상 반영
+
+    PR: [tsup log에 색상 반영](https://github.com/NaverPayDev/pite/pull/55)
+
 ## 1.1.1
 
 ### Patch Changes
