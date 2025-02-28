@@ -12,7 +12,7 @@ const filterEntry = (entry: string | string[] | Record<string, string>) => {
         return [entry].filter((pattern) => !excludeExts.some((exts) => pattern.includes(exts)))
     }
 
-    if (typeof entry === 'object' && !Array.isArray(entry)) {
+    if (!Array.isArray(entry)) {
         return Object.fromEntries(
             Object.entries(entry).filter(([_, value]) => !excludeExts.some((exts) => value.includes(exts))),
         )
@@ -43,15 +43,17 @@ export default function vitePluginTsup({formats, entry: rawEntry, outDir}: ViteP
     const hasEsm = formats.some((format) => format === 'es')
     const hasCjs = formats.some((format) => format === 'cjs')
 
-    if (Array.isArray(entry) && entry.length === 0) {
-        return {
-            name: 'vite-plugin-tsup',
+    if (Array.isArray(entry)) {
+        if (entry.length === 0) {
+            return {
+                name: 'vite-plugin-tsup',
+            }
         }
-    }
-
-    if (!Array.isArray(entry) && Object.keys(entry).length === 0) {
-        return {
-            name: 'vite-plugin-tsup',
+    } else {
+        if (Object.keys(entry).length === 0) {
+            return {
+                name: 'vite-plugin-tsup',
+            }
         }
     }
 

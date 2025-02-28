@@ -40,7 +40,7 @@ export function getViteEntry(input: string | string[] | Record<string, string>) 
         }
     }
 
-    if (typeof input === 'object' && !Array.isArray(input)) {
+    if (!Array.isArray(input)) {
         return input
     }
 
