@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 
+import chalk from 'chalk'
 import {build, Format} from 'tsup'
 import {Plugin} from 'vite'
 
@@ -45,7 +46,7 @@ export default function vitePluginTsup({formats, entry: rawEntry, outDir}: ViteP
         name: 'vite-plugin-tsup',
         async closeBundle() {
             try {
-                console.log('Starting tsup to generate .d.ts files...')
+                console.log(chalk.blue('\nStarting tsup to generate .d.ts files...\n'))
 
                 if (hasEsm) {
                     await build(createConfig({entry, format: 'esm', outDir: outDir.esm}))
@@ -55,9 +56,9 @@ export default function vitePluginTsup({formats, entry: rawEntry, outDir}: ViteP
                     await build(createConfig({entry, format: 'cjs', outDir: outDir.cjs}))
                 }
 
-                console.log('tsup finished successfully.')
+                console.log(chalk.green('\ntsup finished successfully.'))
             } catch (error) {
-                console.error('Error running tsup plugin:', error)
+                console.error(chalk.red('Error running tsup plugin:'), error)
             }
         },
     }
