@@ -6,7 +6,7 @@ import {BuildOptions, defineConfig, Plugin} from 'vite'
 
 import {getBrowserslistConfig} from './browserslist'
 import {getExternalDependencies} from './dependencies'
-import {getViteEntry} from './getViteEntry'
+import {getViteEntry} from './get-vite-entry'
 import publint from './plugins/rollup-plugin-publint'
 import {shouldInjectPolyfill} from './polyfill'
 import {isValidBrowserslistConfig, replaceExtension} from './util'
