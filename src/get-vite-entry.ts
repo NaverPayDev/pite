@@ -33,7 +33,17 @@ function globToRecordSync(globPatterns: string[]) {
     )
 }
 
-export function getViteEntry(input: string[]) {
+export function getViteEntry(input: string | string[] | Record<string, string>) {
+    if (typeof input === 'string') {
+        return {
+            index: input,
+        }
+    }
+
+    if (!Array.isArray(input)) {
+        return input
+    }
+
     const isAllGlob = input.every((str) => isGlobPattern(str))
 
     // 입력 entry가 glob 패턴으로 들어온 경우
