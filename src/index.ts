@@ -13,8 +13,8 @@ import {isValidBrowserslistConfig, replaceExtension} from './util'
 import vitePluginTsup from './vite-tsup-plugin'
 
 export interface ViteConfigProps {
+    entry: string | string[] | Record<string, string>
     cwd?: string
-    entry: string[]
     cssFileName?: string
     outputs?: {format: 'es' | 'cjs'; dist: string}[]
     allowedPolyfills?: string[]
@@ -131,19 +131,7 @@ export function createViteConfig({
         ...restOptions,
     }
 
-    const plugins = [
-        vitePluginTsup({
-            formats,
-            entry,
-            outDir: {
-                esm: esmDir,
-                cjs: cjsDir,
-            },
-        }),
-    ]
+    const plugins = [vitePluginTsup({formats, entry, outDir: {esm: esmDir, cjs: cjsDir}})]
 
-    return defineConfig({
-        build,
-        plugins,
-    })
+    return defineConfig({build, plugins})
 }
