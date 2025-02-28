@@ -6,7 +6,7 @@ import {Plugin} from 'vite'
 
 // css, .js, .jsx를 필터링합니다
 const filterEntry = (entry: string | string[] | Record<string, string>) => {
-    const excludeExts = ['.css', '.js', '.jsx']
+    const excludeExts = ['.css', '.js', '.jsx', '.mjs', '.cjs']
 
     if (typeof entry === 'string') {
         return [entry].filter((pattern) => !excludeExts.some((exts) => pattern.includes(exts)))
