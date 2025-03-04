@@ -76,6 +76,7 @@
         "@naverpay/markdown-lint": "^0.0.3",
         "@naverpay/prettier-config": "^1.0.0",
         "@types/node": "^22.10.2",
+        "builtin-modules": "^5.0.0",
         "builtins": "^5.1.0",
         "eslint": "^8.57.0",
         "lefthook": "^1.8.2",
