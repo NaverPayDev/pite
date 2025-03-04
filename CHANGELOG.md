@@ -1,5 +1,13 @@
 # @naverpay/pite
 
+## 1.1.4
+
+### Patch Changes
+
+-   eba3160: pite기본 external에 builtins를 적용합니다
+
+    PR: [pite기본 external에 builtins를 적용합니다](https://github.com/NaverPayDev/pite/pull/62)
+
 ## 1.1.3
 
 ### Patch Changes
