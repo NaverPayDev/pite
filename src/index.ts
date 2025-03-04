@@ -2,6 +2,7 @@ import defaultBrowserslist from '@naverpay/browserslist-config'
 import babel from '@rollup/plugin-babel'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import preserveDirectives from 'rollup-plugin-preserve-directives'
+import visualizer from 'rollup-plugin-visualizer'
 import {BuildOptions, defineConfig, Plugin} from 'vite'
 
 import {getBrowserslistConfig} from './browserslist'
@@ -13,10 +14,11 @@ import {isValidBrowserslistConfig, replaceExtension} from './util'
 import vitePluginTsup from './vite-tsup-plugin'
 
 export interface ViteConfigProps {
-    entry: string | string[] | Record<string, string>
     cwd?: string
-    cssFileName?: string
+    entry: string | string[] | Record<string, string>
     outputs?: {format: 'es' | 'cjs'; dist: string}[]
+    cssFileName?: string
+    visualize?: boolean
     allowedPolyfills?: string[]
     ignoredPolyfills?: string[]
     options?: BuildOptions
@@ -30,6 +32,7 @@ export function createViteConfig({
         {format: 'cjs', dist: 'dist/cjs'},
     ],
     cssFileName = 'style.css',
+    visualize = false,
     allowedPolyfills = [],
     ignoredPolyfills = [],
     options,
@@ -122,8 +125,9 @@ export function createViteConfig({
                     extensions: ['.js', '.jsx', '.ts', '.tsx'],
                     exclude: /node_modules/,
                 }),
-                preserveDirectives(),
                 ...inputRollupPlugin,
+                ...(visualize ? [visualizer()] : []),
+                preserveDirectives(),
                 publint({cwd}),
             ],
             ...inputRollupOptions,
