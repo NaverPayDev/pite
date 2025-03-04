@@ -64,6 +64,9 @@
         "glob": "^11.0.1",
         "publint": "^0.3.4",
         "rollup-plugin-preserve-directives": "^0.4.0",
+        "rollup-plugin-visualizer": "^5.14.0",
+        "builtin-modules": "^5.0.0",
+        "builtins": "^5.1.0",
         "sass-embedded": "^1.83.4"
     },
     "peerDependencies": {
@@ -76,8 +79,6 @@
         "@naverpay/markdown-lint": "^0.0.3",
         "@naverpay/prettier-config": "^1.0.0",
         "@types/node": "^22.10.2",
-        "builtin-modules": "^5.0.0",
-        "builtins": "^5.1.0",
         "eslint": "^8.57.0",
         "lefthook": "^1.8.2",
         "lint-staged": "^15.2.10",
