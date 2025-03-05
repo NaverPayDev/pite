@@ -2,7 +2,7 @@ import defaultBrowserslist from '@naverpay/browserslist-config'
 import babel from '@rollup/plugin-babel'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import preserveDirectives from 'rollup-plugin-preserve-directives'
-import visualizer from 'rollup-plugin-visualizer'
+import {PluginVisualizerOptions, visualizer} from 'rollup-plugin-visualizer'
 import {BuildOptions, defineConfig, Plugin} from 'vite'
 
 import {getBrowserslistConfig} from './browserslist'
@@ -17,11 +17,11 @@ export interface ViteConfigProps {
     cwd?: string
     entry: string | string[] | Record<string, string>
     outputs?: {format: 'es' | 'cjs'; dist: string}[]
-    cssFileName?: string
-    visualize?: boolean
+    visualize?: boolean | PluginVisualizerOptions
     allowedPolyfills?: string[]
     ignoredPolyfills?: string[]
     options?: BuildOptions
+    css?: false | {filename: string; extract?: boolean; minify?: boolean; modules?: boolean; scss?: boolean}
 }
 
 export function createViteConfig({
@@ -31,11 +31,11 @@ export function createViteConfig({
         {format: 'es', dist: 'dist/esm'},
         {format: 'cjs', dist: 'dist/cjs'},
     ],
-    cssFileName = 'style.css',
     visualize = false,
     allowedPolyfills = [],
     ignoredPolyfills = [],
     options,
+    css: cssOptions = false,
 }: ViteConfigProps) {
     const browserslistConfig = getBrowserslistConfig(cwd)
     const externalDeps = getExternalDependencies(cwd)
@@ -65,9 +65,9 @@ export function createViteConfig({
     const build: BuildOptions = {
         target: browserslistToEsbuild(browserslist),
         lib: {
-            cssFileName: cssFileName.replace('.css', ''),
             formats,
             entry: getViteEntry(entry),
+            ...(cssOptions ? {cssFileName: cssOptions.filename.replace('.css', '')} : {}),
             ...inputLib,
         },
         rollupOptions: {
@@ -89,16 +89,6 @@ export function createViteConfig({
                         }
 
                         return `${chunkInfo.name}${extension}`
-                    },
-                    assetFileNames: (assetInfo) => {
-                        if (!assetInfo.names) {
-                            return ''
-                        }
-                        if (assetInfo.names.length > 0 && assetInfo.names[0] === 'style.css') {
-                            return cssFileName
-                        }
-
-                        return assetInfo.names[0]
                     },
                 }
             }),
@@ -126,16 +116,37 @@ export function createViteConfig({
                     exclude: /node_modules/,
                 }),
                 ...inputRollupPlugin,
-                ...(visualize ? [visualizer()] : []),
+                ...(visualize ? [visualizer(typeof visualize === 'object' ? visualize : {})] : []),
                 preserveDirectives(),
                 publint({cwd}),
             ],
             ...inputRollupOptions,
         },
+        ...(cssOptions
+            ? {
+                  cssCodeSplit: cssOptions.extract || false,
+                  cssMinify: cssOptions.minify || false,
+              }
+            : {}),
         ...restOptions,
     }
 
     const plugins = [vitePluginTsup({formats, entry, outDir: {esm: esmDir, cjs: cjsDir}})]
 
-    return defineConfig({build, plugins})
+    return defineConfig({
+        build,
+        plugins,
+        ...(cssOptions
+            ? {
+                  css: {
+                      modules: cssOptions.modules
+                          ? {localsConvention: 'camelCase', generateScopedName: '[name]__[local]___[hash:base64:5]'}
+                          : false,
+                      preprocessorOptions: cssOptions.scss
+                          ? {scss: {additionalData: `@use "sass:math"; @use "sass:color";`}}
+                          : undefined,
+                  },
+              }
+            : {}),
+    })
 }
