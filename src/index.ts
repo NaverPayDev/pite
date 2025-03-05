@@ -17,7 +17,6 @@ export interface ViteConfigProps {
     cwd?: string
     entry: string | string[] | Record<string, string>
     outputs?: {format: 'es' | 'cjs'; dist: string}[]
-    cssFileName?: string
     visualize?: boolean | PluginVisualizerOptions
     allowedPolyfills?: string[]
     ignoredPolyfills?: string[]
