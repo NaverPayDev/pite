@@ -19,8 +19,8 @@ export interface ViteConfigProps {
     outputs?: {format: 'es' | 'cjs'; dist: string}[]
     cssFileName?: string
     visualize?: boolean | PluginVisualizerOptions
-    allowedPolyfills?: string[]
-    ignoredPolyfills?: string[]
+    includeRequiredPolyfill?: string[]
+    skipRequiredPolyfillCheck?: string[]
     options?: BuildOptions
 }
 
@@ -33,8 +33,8 @@ export function createViteConfig({
     ],
     cssFileName = 'style.css',
     visualize = false,
-    allowedPolyfills = [],
-    ignoredPolyfills = [],
+    includeRequiredPolyfill = [],
+    skipRequiredPolyfillCheck = [],
     options,
 }: ViteConfigProps) {
     const browserslistConfig = getBrowserslistConfig(cwd)
@@ -114,8 +114,8 @@ export function createViteConfig({
                                 version: '3.39.0',
                                 proposals: true,
                                 shouldInjectPolyfill: shouldInjectPolyfill({
-                                    allowed: new Set(allowedPolyfills),
-                                    ignored: new Set(ignoredPolyfills),
+                                    include: new Set(includeRequiredPolyfill),
+                                    skip: new Set(skipRequiredPolyfillCheck),
                                 }),
                                 debug: true,
                                 targets: browserslist,

@@ -1,19 +1,20 @@
 /** @see https://github.com/zloirock/core-js/blob/master/packages/core-js-compat/src/data.mjs */
-/**
- *
- * @param allowed
- * @example ['es.array.find-last']
- */
 
 export const shouldInjectPolyfill =
-    ({allowed, ignored}: {allowed: Set<string>; ignored: Set<string>}) =>
+    ({include, skip}: {include: Set<string>; skip: Set<string>}) =>
     (polyfill: string, shouldInject: boolean) => {
-        if (ignored.has(polyfill)) {
+        if (skip.has(polyfill)) {
             return false
         }
 
-        if (shouldInject && !allowed.has(polyfill)) {
-            throw new Error(`Your project contains code that requires polyfills [${polyfill}]`)
+        if (shouldInject && !include.has(polyfill)) {
+            throw new Error(
+                `[Polyfill Injection Required] ${polyfill}\n\n` +
+                    `To use this polyfill, please do one of the following:\n` +
+                    `1. Add it to 'includeRequiredPolyfill' to allow injection.\n` +
+                    `2. Add it to 'skipRequiredPolyfillCheck' to skip the verification.\n\n` +
+                    `After making the necessary changes, try building again.`,
+            )
         }
 
         return shouldInject
