@@ -1,5 +1,19 @@
 # @naverpay/pite
 
+## 2.0.0
+
+### Major Changes
+
+-   d7629d6: [공통] polyfill option 및 문구 수정
+
+    PR: [[공통] polyfill option 및 문구 수정](https://github.com/NaverPayDev/pite/pull/72)
+
+### Patch Changes
+
+-   f569d00: [공통] rollup-plugin-visualizer 를 설치하고 옵션을 추가합니다.
+
+    PR: [[공통] rollup-plugin-visualizer 를 설치하고 옵션을 추가합니다.](https://github.com/NaverPayDev/pite/pull/66)
+
 ## 1.1.4
 
 ### Patch Changes
