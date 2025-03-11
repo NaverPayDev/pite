@@ -20,7 +20,7 @@ export default createViteConfig({
         {format: 'es', dir: 'dist/esm'},
         {format: 'cjs', dir: 'dist/cjs'},
     ],
-    ignoredPolyfills: ['esnext.json.parse'],
+    skipRequiredPolyfillCheck: ['esnext.json.parse'],
     options: {
         rollupOptions: {
             external: [...deps, ...builtins()],
