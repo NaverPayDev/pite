@@ -2,7 +2,7 @@ import defaultBrowserslist from '@naverpay/browserslist-config'
 import babel from '@rollup/plugin-babel'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import preserveDirectives from 'rollup-plugin-preserve-directives'
-import visualizer from 'rollup-plugin-visualizer'
+import {PluginVisualizerOptions, visualizer} from 'rollup-plugin-visualizer'
 import {BuildOptions, defineConfig, Plugin} from 'vite'
 
 import {getBrowserslistConfig} from './browserslist'
@@ -18,7 +18,7 @@ export interface ViteConfigProps {
     entry: string | string[] | Record<string, string>
     outputs?: {format: 'es' | 'cjs'; dist: string}[]
     cssFileName?: string
-    visualize?: boolean
+    visualize?: boolean | PluginVisualizerOptions
     allowedPolyfills?: string[]
     ignoredPolyfills?: string[]
     options?: BuildOptions
@@ -126,7 +126,7 @@ export function createViteConfig({
                     exclude: /node_modules/,
                 }),
                 ...inputRollupPlugin,
-                ...(visualize ? [visualizer()] : []),
+                ...(visualize ? [visualizer(typeof visualize === 'object' ? visualize : {})] : []),
                 preserveDirectives(),
                 publint({cwd}),
             ],
