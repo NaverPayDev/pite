@@ -19,7 +19,13 @@ export interface ViteConfigProps {
     outputs?: {format: 'es' | 'cjs'; dist: string}[]
     cssFileName?: string
     visualize?: boolean | PluginVisualizerOptions
+    /**
+     * @description List of polyfills that need to be injected
+     */
     includeRequiredPolyfill?: string[]
+    /**
+     * @description Skip verification for required polyfill injection
+     */
     skipRequiredPolyfillCheck?: string[]
     options?: BuildOptions
 }
