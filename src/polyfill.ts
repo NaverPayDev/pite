@@ -17,7 +17,9 @@ export const shouldInjectPolyfill =
                     `To use this polyfill, please do one of the following:\n` +
                         `1. Add it to 'includeRequiredPolyfill' to allow injection.\n` +
                         `2. Add it to 'skipRequiredPolyfillCheck' to skip the verification.\n\n` +
-                        `After making the necessary changes, try building again.`,
+                        `After making the necessary changes, try building again.\n\n` +
+                        `⚠️ Note: Polyfills will not be added automatically. Any errors due to unsupported methods in certain browsers or environments will be the responsibility of the package user.\n` +
+                        `(core-js adds polyfills even for specific browser bugs, so carefully consider whether a polyfill is truly necessary.)`,
                 ),
             )
             process.exit(1)
