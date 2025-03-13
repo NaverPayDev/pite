@@ -103,6 +103,7 @@ export default createViteConfig({
     ],
     cssFileName: 'style.css', 
     visualize: true,
+    publint: {severity: 'error'}
     includeRequiredPolyfill: ['fetch', 'Promise'], 
     skipRequiredPolyfillCheck: ['Symbol'], 
     options: {
@@ -131,6 +132,7 @@ vite build
 | `outputs`                  | `{ format: 'es' \| 'cjs'; dist: string }[]`             | 출력할 모듈 포맷 및 디렉토리 지정                |
 | `cssFileName`              | `string`                                                | 출력될 CSS 파일 이름                             |
 | `visualize`                | `boolean` \| [`PluginVisualizerOptions`](https://github.com/btd/rollup-plugin-visualizer?tab=readme-ov-file#options) | [rollup-plugin-visualizer](https://github.com/btd/rollup-plugin-visualizer) 활성화 옵션 |
+| `publint`                  | `{ severity?: 'error' \| 'warn' \| 'off' }`             | publint 검사의 심각도 지정<br />(`error`: 코드1로 종료, `warn`: 경고만 출력, `off`: 검사 끄기) |
 | `includeRequiredPolyfill`  | `string[]`                                              | 주입이 필요한 폴리필 목록                        |
 | `skipRequiredPolyfillCheck`| `string[]`                                              | 폴리필 검사를 건너뛰고 주입하지 않을 폴리필 목록 |
 | `options`                  | [`BuildOptions`](https://ko.vite.dev/config/build-options) | 추가적인 Vite 빌드 옵션                          |
