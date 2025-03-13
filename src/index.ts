@@ -2,7 +2,7 @@ import defaultBrowserslist from '@naverpay/browserslist-config'
 import babel from '@rollup/plugin-babel'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import preserveDirectives from 'rollup-plugin-preserve-directives'
-import visualizer from 'rollup-plugin-visualizer'
+import {PluginVisualizerOptions, visualizer} from 'rollup-plugin-visualizer'
 import {BuildOptions, defineConfig, Plugin} from 'vite'
 
 import {getBrowserslistConfig} from './browserslist'
@@ -18,9 +18,15 @@ export interface ViteConfigProps {
     entry: string | string[] | Record<string, string>
     outputs?: {format: 'es' | 'cjs'; dist: string}[]
     cssFileName?: string
-    visualize?: boolean
-    allowedPolyfills?: string[]
-    ignoredPolyfills?: string[]
+    visualize?: boolean | PluginVisualizerOptions
+    /**
+     * @description List of polyfills that need to be injected
+     */
+    includeRequiredPolyfill?: string[]
+    /**
+     * @description Skip verification for required polyfill injection
+     */
+    skipRequiredPolyfillCheck?: string[]
     options?: BuildOptions
 }
 
@@ -33,8 +39,8 @@ export function createViteConfig({
     ],
     cssFileName = 'style.css',
     visualize = false,
-    allowedPolyfills = [],
-    ignoredPolyfills = [],
+    includeRequiredPolyfill = [],
+    skipRequiredPolyfillCheck = [],
     options,
 }: ViteConfigProps) {
     const browserslistConfig = getBrowserslistConfig(cwd)
@@ -114,8 +120,8 @@ export function createViteConfig({
                                 version: '3.39.0',
                                 proposals: true,
                                 shouldInjectPolyfill: shouldInjectPolyfill({
-                                    allowed: new Set(allowedPolyfills),
-                                    ignored: new Set(ignoredPolyfills),
+                                    include: new Set(includeRequiredPolyfill),
+                                    skip: new Set(skipRequiredPolyfillCheck),
                                 }),
                                 debug: true,
                                 targets: browserslist,
@@ -126,7 +132,7 @@ export function createViteConfig({
                     exclude: /node_modules/,
                 }),
                 ...inputRollupPlugin,
-                ...(visualize ? [visualizer()] : []),
+                ...(visualize ? [visualizer(typeof visualize === 'object' ? visualize : {})] : []),
                 preserveDirectives(),
                 publint({cwd}),
             ],
