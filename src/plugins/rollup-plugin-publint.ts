@@ -11,10 +11,9 @@ import {Plugin} from 'vite'
 
 interface PublintOption {
     cwd: string
-    severity: 'error' | 'warn' | 'off'
+    severity: 'error' | 'warn'
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const publint = ({cwd, severity}: PublintOption): Plugin => {
     let hasBuildStartError = false
 
@@ -25,10 +24,15 @@ const publint = ({cwd, severity}: PublintOption): Plugin => {
             try {
                 publintBeforeBuild(cwd)
                 console.log(chalk.green('All good!\n'))
-            } catch {
+            } catch (error) {
+                if (error instanceof Error) {
+                    console.log(
+                        `- [${severity === 'error' ? chalk.red('error') : chalk.yellow('warning')}] ${error.message}`,
+                    )
+                }
                 hasBuildStartError = true
                 console.log('\n')
-                process.exit(1)
+                severity === 'error' && process.exit(1)
             }
         },
         closeBundle: {
@@ -56,12 +60,12 @@ const publint = ({cwd, severity}: PublintOption): Plugin => {
                     }
 
                     console.log(
-                        `- [${hasError ? chalk.red(message.type) : chalk.yellow(message.type)}] ${formatMessage(message, pkg)}`,
+                        `- [${hasError && severity === 'error' ? chalk.red(message.type) : chalk.yellow(message.type)}] ${formatMessage(message, pkg)}`,
                     )
                 }
                 if (hasBuildEndError) {
                     console.log('\n')
-                    process.exit(1)
+                    severity === 'error' && process.exit(1)
                 }
             },
             sequential: true,
