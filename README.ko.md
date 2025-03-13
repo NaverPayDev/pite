@@ -156,7 +156,10 @@ pite는 기본적으로 현재 프로젝트의 `browserslist` 기준에 따라 �
 - `includeRequiredPolyfill`은 특정 폴리필이 실제로 라이브러리 구동에 필요하다고 판단될 경우, 원하는 폴리필을 명시적으로 추가할 수 있도록 지원합니다. 옵션 값으로 주입할 폴리필 목록을 지정하면, 해당 기능이 원활하게 동작할 수 있도록 필요한 폴리필을 자동으로 포함합니다.  
 폴리필은 runtime 방식으로 적용되며, 라이브러리 번들에 직접 포함되지 않습니다. 따라서, 사용처의 dependencies에 `core-js-pure@3.x`가 설치되어 있어야 정상적으로 동작합니다.
 - `skipRequiredPolyfillCheck`은 특정 폴리필이 필요한 경우라도 오류를 발생시키지 않도록 설정할 수 있습니다. 라이브러리가 해당 폴리필이 필요하지 않다고 판단된다면 이 옵션을 활용할 수 있습니다.  
-`core-js`는 지정된 브라우저 환경에 없는 기능을 감지하여 폴리필을 추가할 뿐만 아니라, proposal 단계의 기능, 브라우저에서 버그가 보고된 기능, 기존 기능에 새롭게 추가된 확장 기능 등에 대해서도 폴리필을 적용할 수 있습니다. 따라서, 직접 사용하지 않는 기능이라도 폴리필이 필요하다고 감지되어 오류가 발생할 수 있습니다.  
+`core-js`는 지정된 브라우저 환경에서 지원되지 않는 기능을 감지하여 폴리필을 추가할 뿐만 아니라, proposal 단계의 기능, 특정 브라우저 버전에서 버그가 보고된 기능, 기존 기능에 새롭게 추가된 확장 기능, 그리고 자바스크립트의 동적 특성으로 인해 프로토타입 메서드 여부를 정확히 판단할 수 없는 경우에도 일괄적으로 폴리필을 삽입합니다.  
+이러한 동작 방식은 단순히 브라우저 지원 범위를 보완하려는 개발자의 의도와 다르게 불필요한 폴리필이 추가되는 문제로 이어질 수 있습니다. 이를 방지하고 싶다면 `skipRequiredPolyfillCheck` 옵션을 활용해 폴리필을 생략할 수도 있습니다. 이러한 옵션을 세밀하게 제어한다면, 패키지의 전체 크기를 최적화할 수 있습니다.  
+다만 **정말로 브라우저 지원 범위를 벗어나 폴리필을 추가해야 하는 경우**에는 문제가 발생할 수 있으니 신중하게 사용해주세요.  
+(`skipRequiredPolyfillCheck` 옵션을 사용하는 [예시 패키지](#example-packages)를 확인해보세요.)
 
 ## Example Packages
 
@@ -183,14 +186,19 @@ export default createViteConfig({
             dist: 'dist',
         },
     ],
-    includeRequiredPolyfill: [
+    skipRequiredPolyfillCheck: [
         // https://bugs.chromium.org/p/v8/issues/detail?id=12681
         'es.array.push', 
         // https://bugzilla.mozilla.org/show_bug.cgi?id=1767541
         'es.array.includes', 
         // https://issues.chromium.org/issues/40672866
         'es.array.reduce', 
-        // .. 
+        // https://github.com/zloirock/core-js/issues/480#issuecomment-457494016 safari bug
+        'es.string.trim', 
+        // https://github.com/zloirock/core-js/commit/9017066b4cb367c6609e4473d43d6e6dad8031a5#diff-59f90be4cf68f9d13d2dce1818780ae968bf48328da4014b47138adf527ec0fcR1066
+        'es.regexp.flags', 
+        // https://bugs.webkit.org/show_bug.cgi?id=188794
+        'es.array.reverse', 
     ],
 })
 ```
