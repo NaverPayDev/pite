@@ -81,9 +81,13 @@ npm install --save-dev @naverpay/pite
 pnpm add -D @naverpay/pite
 ```
 
-## Requirement
+## Requirements
 
-?
+```
+node: >=18
+vite: >=6.0.10
+tsup: >=8.3.5
+```
 
 ## How to use
 
