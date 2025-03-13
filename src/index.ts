@@ -8,7 +8,7 @@ import {BuildOptions, defineConfig, Plugin} from 'vite'
 import {getBrowserslistConfig} from './browserslist'
 import {getExternalDependencies} from './dependencies'
 import {getViteEntry} from './get-vite-entry'
-import publint from './plugins/rollup-plugin-publint'
+import publintPlugin from './plugins/rollup-plugin-publint'
 import {shouldInjectPolyfill} from './polyfill'
 import {isValidBrowserslistConfig, replaceExtension} from './util'
 import vitePluginTsup from './vite-tsup-plugin'
@@ -19,6 +19,7 @@ export interface ViteConfigProps {
     outputs?: {format: 'es' | 'cjs'; dist: string}[]
     cssFileName?: string
     visualize?: boolean | PluginVisualizerOptions
+    publint?: {severity?: 'error' | 'warn' | 'off'}
     /**
      * @description List of polyfills that need to be injected
      */
@@ -39,6 +40,7 @@ export function createViteConfig({
     ],
     cssFileName = 'style.css',
     visualize = false,
+    publint: {severity = 'error'} = {},
     includeRequiredPolyfill = [],
     skipRequiredPolyfillCheck = [],
     options,
@@ -134,7 +136,7 @@ export function createViteConfig({
                 ...inputRollupPlugin,
                 ...(visualize ? [visualizer(typeof visualize === 'object' ? visualize : {})] : []),
                 preserveDirectives(),
-                publint({cwd}),
+                ...(severity !== 'off' ? [publintPlugin({cwd, severity})] : []),
             ],
             ...inputRollupOptions,
         },

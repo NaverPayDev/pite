@@ -11,9 +11,11 @@ import {Plugin} from 'vite'
 
 interface PublintOption {
     cwd: string
+    severity: 'error' | 'warn' | 'off'
 }
 
-const publint = ({cwd}: PublintOption): Plugin => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const publint = ({cwd, severity}: PublintOption): Plugin => {
     let hasBuildStartError = false
 
     return {
