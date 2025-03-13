@@ -1,5 +1,11 @@
 # @naverpay/pite
 
+## 2.1.0
+
+### Minor Changes
+
+-   cec8464: publint severity 옵션 추가
+
 ## 2.0.0
 
 ### Major Changes
