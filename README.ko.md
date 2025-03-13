@@ -63,12 +63,14 @@
 >
 > publint에 영감을 받아 만들어진 패키지로, 네이버페이 내부 모범 사례를 충족하도록 하는 rule이 작성되어 있습니다.
 
-### 자체 `vite-tsup-plugin`
+### 자체 개발한 [`vite-tsup-plugin`](https://github.com/NaverPayDev/pite/blob/main/src/vite-tsup-plugin.ts)을 이용해 typescript 빌드 환경 구성
 
+- tsup API를 활용해 제작한 vite 플러그인입니다.
 - 사용처에서 별도의 tsup 설정 없이 빌드 환경을 구성할 수 있습니다.
 - ESM과 CJS 각각 선언 파일(`.d.ts`)을 생성하여 다양한 환경에서 일관된 타입 정보를 제공합니다.
 - [`vite-plugin-dts` 사용시 module resolution 이슈](https://github.com/NaverPayDev/pite/issues/27)를 해결하기 위해 tsup 실행 커맨드를 plugin으로 만들어 안정적인 타입 선언파일 생성을 지원합니다.
 - tsup 단독으로 사용할 경우 rollup 플러그인을 적용할 수 없지만, pite 사용시 풍부한 rollup 생태계를 그대로 이용할 수 있습니다.
+- 이 플러그인은 별도로 배포되지 않으며, 내부 프로젝트에서만 사용됩니다.
 
 ## Install
 
