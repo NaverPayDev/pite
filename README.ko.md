@@ -40,14 +40,14 @@
 - 폴리필이 필요한 경우, [runtime](https://github.com/rollup/plugins/tree/master/packages/babel#babelhelpers) 방식을 주입하여 불필요한 코드 중복을 방지하고 패키지 크기를 최적화합니다.
 - 전역 오염을 방지하기 위해 [core-js-pure (3.39.0)](https://github.com/babel/babel-polyfills/tree/main/packages/babel-plugin-polyfill-corejs3)를 지원하여 안전한 환경에서 폴리필을 적용할 수 있습니다.
 
-### 라이브러리 빌드 Best Practice 제시
+### 라이브러리 빌드 모범 사례 제시
 
 - 라이브러리의 Entry Path를 검사하여 최적의 디렉토리 구조를 안내하는 기능을 제공합니다.
 - `preserveModules`와 `preserveDirectives`을 기본으로 지원합니다.
   - `preserveModules`: 원본 소스의 디렉토리 구조를 유지한 채 번들링할 수 있습니다. 개별 모듈을 직접 가져다 사용할 수 있어서 트리쉐이킹(Tree Shaking)에 도움을 줍니다.
   - `preserveDirectives`: `'use client'`와 같은 디렉티브를 번들링 과정에서 유지하여 특정 실행 환경에서의 동작을 보장합니다.
 - `package.json`에서 `dependencies`, `peerDependencies` 등 외부 의존성을 기본적으로 제외 처리하여 불필요한 코드가 포함되지 않도록 합니다.
-- 기본적으로 Best Practice를 제공하지만, 필요에 따라 설정을 자유롭게 조정할 수 있도록 유연한 빌드 옵션을 지원합니다. 이를 통해 프로젝트 요구사항에 맞게 최적화된 빌드 구성을 쉽게 변경할 수 있습니다.
+- 기본적으로 모범 사례를 제공하지만, 필요에 따라 설정을 자유롭게 조정할 수 있도록 유연한 빌드 옵션을 지원합니다. 이를 통해 프로젝트 요구사항에 맞게 최적화된 빌드 구성을 쉽게 변경할 수 있습니다.
 
 ### `publint`를 이용한 빌드 검증
 
