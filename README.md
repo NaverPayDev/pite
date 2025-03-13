@@ -45,7 +45,8 @@ While maintaining the strengths of both `vite` and `tsup`, pite offers presets t
 - Supports `preserveModules` and `preserveDirectives` by default:
   - `preserveModules`: Maintains the original source directory structure when bundling. This allows direct imports of individual modules and enhances tree shaking.
   - `preserveDirectives`: Preserves directives like `'use client'` in the bundling process to ensure expected behavior in specific runtime environments.
-- Automatically excludes external dependencies (`dependencies`, `peerDependencies`) in `package.json` to prevent unnecessary code from being bundled.
+- Automatically excludes external dependencies (`dependencies`, `peerDependencies`) in `package.json` to prevent unnecessary code from being bundled.  
+If a package installed in `devDependencies` is executed within the project, it will not be treated as an external dependency and will be included in the bundle. If a package needs to be included in the bundle, it is appropriate to specify it in `dependencies` or `peerDependencies`. Please list only packages that are used exclusively in the development environment under `devDependencies`.
 - While best practices are provided by default, pite offers flexible build options that can be adjusted to meet project-specific requirements.
 
 ### Build Validation with `publint`
@@ -61,12 +62,14 @@ While maintaining the strengths of both `vite` and `tsup`, pite offers presets t
 >
 > A package inspired by publint, designed to enforce best practices specific to Naver Pay’s internal standards.
 
-### Custom `vite-tsup-plugin`
+### Setting Up a TypeScript Build Environment Using the Custom `vite-tsup-plugin`
 
+- This is a Vite plugin built using the tsup API.
 - Allows projects to set up a build environment without requiring additional `tsup` configurations.
 - Generates `.d.ts` declaration files for both ESM and CJS builds, ensuring consistent type information across different environments.
 - Provides a plugin for executing `tsup` commands to ensure stable type declaration file generation, addressing [`vite-plugin-dts` module resolution issues](https://github.com/NaverPayDev/pite/issues/27).
 - Unlike standalone `tsup`, which does not support Rollup plugins, using pite allows access to the full Rollup plugin ecosystem.
+- This plugin is not published and is intended for internal project use only.
 
 ## Install
 
@@ -149,7 +152,11 @@ By default, `pite` detects code that requires polyfills based on the project's `
 The `includeRequiredPolyfill` and `skipRequiredPolyfillCheck` options allow you to adjust the polyfill injection criteria and processing behavior. These options provide flexibility in applying polyfills based on project requirements.
 
 - `includeRequiredPolyfill` allows explicit inclusion of polyfills deemed necessary for the library’s functionality. By specifying the required polyfills, they will be automatically included to ensure proper execution. These polyfills are applied at runtime and are not bundled directly within the library. Therefore, `core-js-pure@3.x` must be installed as a dependency.
-- `skipRequiredPolyfillCheck` prevents errors from being raised even if certain polyfills are detected as necessary. This option is useful when the library does not require specific polyfills, despite automated detection indicating otherwise. `core-js` not only detects missing features in target environments but also applies polyfills for proposal-stage features, browser-reported bugs, and extensions to existing functionalities. As a result, an error may be triggered even for unused features.
+- `skipRequiredPolyfillCheck` prevents errors from being raised even if certain polyfills are detected as necessary. This option is useful when the library does not require specific polyfills, despite automated detection indicating otherwise.  
+`core-js` not only detects missing features in target environments, but it also inserts polyfills for proposal-stage features, features with reported bugs in specific browser versions, newly introduced extensions to existing features, and cases where JavaScript’s dynamic nature makes it difficult to accurately determine the presence of prototype methods.  
+This behavior may lead to unnecessary polyfills being added, which can differ from a developer’s intent to simply complement browser support. To prevent this, you can use the `skipRequiredPolyfillCheck` option to exclude certain polyfills. By carefully controlling this option, you can optimize the overall package size.  
+However, **if a feature genuinely falls outside the supported browser range and requires a polyfill**, issues may arise, so use this option with caution.  
+(See [example packages](#example-packages) that use the `skipRequiredPolyfillCheck` option.)
 
 ## Example Packages
 
@@ -176,14 +183,19 @@ export default createViteConfig({
             dist: 'dist',
         },
     ],
-    includeRequiredPolyfill: [
+    skipRequiredPolyfillCheck: [
         // https://bugs.chromium.org/p/v8/issues/detail?id=12681
         'es.array.push',
         // https://bugzilla.mozilla.org/show_bug.cgi?id=1767541
         'es.array.includes',
         // https://issues.chromium.org/issues/40672866
         'es.array.reduce',
-        // ...
+        // https://github.com/zloirock/core-js/issues/480#issuecomment-457494016 safari bug
+        'es.string.trim', 
+        // https://github.com/zloirock/core-js/commit/9017066b4cb367c6609e4473d43d6e6dad8031a5#diff-59f90be4cf68f9d13d2dce1818780ae968bf48328da4014b47138adf527ec0fcR1066
+        'es.regexp.flags', 
+        // https://bugs.webkit.org/show_bug.cgi?id=188794
+        'es.array.reverse', 
     ],
 })
 ```
