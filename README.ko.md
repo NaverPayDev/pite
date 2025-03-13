@@ -153,6 +153,76 @@ pite는 기본적으로 현재 프로젝트의 `browserslist` 기준에 따라 �
 - `skipRequiredPolyfillCheck`은 특정 폴리필이 필요한 경우라도 오류를 발생시키지 않도록 설정할 수 있습니다. 라이브러리가 해당 폴리필이 필요하지 않다고 판단된다면 이 옵션을 활용할 수 있습니다.  
 `core-js`는 지정된 브라우저 환경에 없는 기능을 감지하여 폴리필을 추가할 뿐만 아니라, proposal 단계의 기능, 브라우저에서 버그가 보고된 기능, 기존 기능에 새롭게 추가된 확장 기능 등에 대해서도 폴리필을 적용할 수 있습니다. 따라서, 직접 사용하지 않는 기능이라도 폴리필이 필요하다고 감지되어 오류가 발생할 수 있습니다.  
 
-## 📜 라이선스
+## Example Packages
+
+pite로 빌드한 예시 라이브러리의 설정과 빌드 결과물을 확인해보세요.
+
+### [`@naverpay/hidash`](https://github.com/NaverPayDev/hidash/tree/main)
+
+- [Go to config](https://github.com/NaverPayDev/hidash/blob/main/vite.config.mts)
+- [unpkg `@naverpay/hidash`](https://www.unpkg.com/browse/@naverpay/hidash@latest/)
+
+```js
+import {createViteConfig} from '@naverpay/pite'
+
+export default createViteConfig({
+    cwd: '.',
+    entry: ['!./src/**/*.bench.ts', '!./src/**/*.test.ts', './src/**/*.ts'],
+    outputs: [
+        {
+            format: 'cjs',
+            dist: 'dist',
+        },
+        {
+            format: 'es',
+            dist: 'dist',
+        },
+    ],
+    entry: {
+        assign: './src/assign.ts',
+        before: './src/before.ts',
+        chunk: './src/chunk.ts',
+        clamp: './src/clamp.ts',
+        clone: './src/clone.ts',
+        cloneDeep: './src/cloneDeep.ts',
+        debounce: './src/debounce.ts',
+        delay: './src/delay.ts',
+        difference: './src/difference.ts',
+        entries: './src/entries.ts',
+        //...
+    },
+    includeRequiredPolyfill: [
+        // https://bugs.chromium.org/p/v8/issues/detail?id=12681
+        'es.array.push', 
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=1767541
+        'es.array.includes', 
+        // https://issues.chromium.org/issues/40672866
+        'es.array.reduce', 
+        // .. 
+    ],
+})
+```
+
+### [`@naverpay/vanilla-store`](https://github.com/NaverPayDev/pie/tree/main/packages/vanilla-store)
+
+- [Go to config](https://github.com/NaverPayDev/pie/blob/main/packages/vanilla-store/vite.config.mjs)
+- [unpkg `@naverpay/vanilla-store`](https://www.unpkg.com/browse/@naverpay/vanilla-store@latest/)
+
+```js
+import {createViteConfig} from '@naverpay/pite'
+
+export default createViteConfig({
+    cwd: '.',
+    entry: ['./src/index.ts'],
+    skipRequiredPolyfillCheck: [
+        'esnext.json.parse'
+    ],
+    options: {
+        minify: false,
+    },
+})
+```
+
+## License
 
 MIT License © 2025 NaverPay
