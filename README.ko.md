@@ -46,7 +46,8 @@
 - `preserveModules`와 `preserveDirectives`을 기본으로 지원합니다.
   - `preserveModules`: 원본 소스의 디렉토리 구조를 유지한 채 번들링할 수 있습니다. 개별 모듈을 직접 가져다 사용할 수 있어서 트리쉐이킹(Tree Shaking)에 도움을 줍니다.
   - `preserveDirectives`: `'use client'`와 같은 디렉티브를 번들링 과정에서 유지하여 특정 실행 환경에서의 동작을 보장합니다.
-- `package.json`에서 `dependencies`, `peerDependencies` 등 외부 의존성을 기본적으로 제외 처리하여 불필요한 코드가 포함되지 않도록 합니다.
+- `package.json`에서 `dependencies`, `peerDependencies` 등 외부 의존성을 기본적으로 제외 처리하여 불필요한 코드가 포함되지 않도록 합니다.  
+`devDependencies`에 설치된 패키지가 프로젝트 내에서 실행될 경우 외부 종속성으로 처리되지 않아 번들에 포함됩니다. 번들에 포함해야 하는 패키지라면 `dependencies` 또는 `peerDependencies`에 명시하는 것이 적절합니다. `devDependencies`에는 개발 환경에서만 사용될 패키지를 작성해주세요.
 - 기본적으로 모범 사례를 제공하지만, 필요에 따라 설정을 자유롭게 조정할 수 있도록 유연한 빌드 옵션을 지원합니다. 이를 통해 프로젝트 요구사항에 맞게 최적화된 빌드 구성을 쉽게 변경할 수 있습니다.
 
 ### `publint`를 이용한 빌드 검증
