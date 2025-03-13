@@ -1,142 +1,212 @@
 # `@naverpay/pite`
 
-`@naverpay/pite` is a Vite bundler configuration package designed for building JavaScript and TypeScript libraries efficiently. It provides an optimized Vite configuration with support for multiple module formats (`ESM` and `CJS`), external dependency handling, and polyfill management.
+> lang: En | [Ko](./README.ko.md)
+
+A Vite bundler configuration package that supports library builds with minimal setup.
+
+## Why pite?
+
+[`vite`](https://github.com/vitejs/vite) has become a versatile build tool supporting various frameworks beyond Vue.js, including React. It also provides a Library Mode for bundling libraries, making it a strong alternative to Rollup. With its fast build speed and optimized bundling environment, it is gaining popularity as a package bundler.
+
+However, **without prior knowledge of core concepts and configuration methods for library builds, setting up an efficient configuration file can be challenging.** To effectively utilize Vite’s Library Mode, multiple factors must be considered.
+
+[`tsup`](https://github.com/egoist/tsup) is an esbuild-based bundler that simplifies bundling TypeScript libraries. It is useful for basic bundling tasks. However, **it does not provide automatic polyfill insertion or transpilation based on `browserslist`, meaning additional tools or configurations may be required for an optimized build in specific environments.** Additionally, since it is based on esbuild, it lacks compatibility with Rollup plugins, limiting access to Rollup’s extensive plugin ecosystem.
+
+To address these limitations, **pite provides a more intuitive and flexible library build environment.**
+While maintaining the strengths of both `vite` and `tsup`, pite offers presets that enable seamless configuration for various environments, allowing stable library builds without complex setup.
 
 ## Features
 
-- 📦 **Supports multiple formats**: Builds `ESM` (`.mjs`) and `CJS` (`.js`) modules.
-- 🚀 **Optimized for library development**: Uses `Vite` with `Rollup` for bundling.
-- 🎯 **Targeted transpilation**: Leverages `browserslist` for precise ES build targets.
-- 🔄 **Automatic polyfill injection**: Supports `core-js-pure` polyfills with intelligent injection.
-- 🔧 **Customizable configurations**: Allows overriding build options and external dependencies.
-- 🏗 **Preserves module structures**: Keeps `preserveModules` for optimal tree-shaking.
-- 🔍 **Build validation**: Uses `publint` to verify configuration and output before and after build.
+### Supports Dual Package Builds
 
-## Installation
+- Supports both ESM and CJS formats, with the option to generate ESM-only builds.
+- Allows specifying subpaths using glob patterns.
+- Enables defining separate output paths for different module systems.
 
-Install `@naverpay/pite` as a development dependency:
+### `browserslist`-based Transpilation
+
+- Utilizes [browserslist-to-esbuild](https://github.com/marcofugaro/browserslist-to-esbuild#readme) to read `.browserslistrc` and convert it into an `esbuild`-compatible `target` format. This allows automatic optimization based on the `.browserslistrc` in the consuming project without manually configuring build targets.
+- Performs transpilation based on `browserslist`, ensuring the output matches the specified browser environment.
+- If no configuration is provided, it defaults to [`@naverpay/browserslist-config`](https://github.com/NaverPayDev/browserslist-config#readme).
+
+> 📦 [`@naverpay/browserslist-config`](https://github.com/NaverPayDev/browserslist-config#readme)  
+>
+> A Shareable Browserslist Config package that reflects [Naver Pay’s supported browser range](https://browsersl.ist/#q=%3E0.2%25%2Cnot+dead%2Cnot+op_mini+all%2Cnot+ie%3E%3D0%2Cnot+ios_saf%3C15%2Cios_saf%3E%3D15%2Cnode%3E%3D18.18.0%2CChrome%3E%3D106&region=KR).
+
+### Automatic Polyfill Detection & Optimization Based on `browserslist`
+
+- If a `.browserslistrc` file is present, pite automatically detects whether polyfills are required and provides guidance.
+- When polyfills are needed, it injects them using the [runtime](https://github.com/rollup/plugins/tree/master/packages/babel#babelhelpers) method to prevent redundant code and optimize package size.
+- Supports [core-js-pure (3.39.0)](https://github.com/babel/babel-polyfills/tree/main/packages/babel-plugin-polyfill-corejs3) to apply polyfills safely without polluting the global environment.
+
+### Best Practices for Library Builds
+
+- Analyzes the entry path of the library and provides recommendations for an optimal directory structure.
+- Supports `preserveModules` and `preserveDirectives` by default:
+  - `preserveModules`: Maintains the original source directory structure when bundling. This allows direct imports of individual modules and enhances tree shaking.
+  - `preserveDirectives`: Preserves directives like `'use client'` in the bundling process to ensure expected behavior in specific runtime environments.
+- Automatically excludes external dependencies (`dependencies`, `peerDependencies`) in `package.json` to prevent unnecessary code from being bundled.
+- While best practices are provided by default, pite offers flexible build options that can be adjusted to meet project-specific requirements.
+
+### Build Validation with `publint`
+
+- Runs `verifyPackageJSON` from `@naverpay/publint` before the build process to check if critical `package.json` fields for publishing (e.g., `main`, `files`) are correctly defined.
+- Executes the `publint` API after the build to verify that `package.json` fields like `main` and `exports` are correctly set and that no required files are missing.
+
+> 📦 [`publint`](https://publint.dev/docs/)
+>
+> publint is an npm package linter that ensures optimal compatibility with Vite, Rollup, and other environments.
+>
+> 📦 [`@naverpay/publint`](https://github.com/NaverPayDev/cli/tree/main/packages/publint)  
+>
+> A package inspired by publint, designed to enforce best practices specific to Naver Pay’s internal standards.
+
+### Custom `vite-tsup-plugin`
+
+- Allows projects to set up a build environment without requiring additional `tsup` configurations.
+- Generates `.d.ts` declaration files for both ESM and CJS builds, ensuring consistent type information across different environments.
+- Provides a plugin for executing `tsup` commands to ensure stable type declaration file generation, addressing [`vite-plugin-dts` module resolution issues](https://github.com/NaverPayDev/pite/issues/27).
+- Unlike standalone `tsup`, which does not support Rollup plugins, using pite allows access to the full Rollup plugin ecosystem.
+
+## Install
+
+Run the following command to install as a `devDependencies`:
 
 ```sh
 npm install --save-dev @naverpay/pite
 ```
 
-or using `pnpm`:
+Or, if using `pnpm`:
 
 ```sh
 pnpm add -D @naverpay/pite
 ```
 
-## Usage
+## Requirements
 
-### 1. Create a Vite Config File
+```
+node: >=18
+vite: >=6.0.10
+tsup: >=8.3.5
+```
 
-In your `vite.config.ts`, import and use `createViteConfig`:
+## How to use
+
+### 1️⃣ Create a Vite Configuration File
+
+Import `createViteConfig` in `vite.config.ts` and set up the configuration.
 
 ```ts
 import { createViteConfig } from '@naverpay/pite'
 
 export default createViteConfig({
-    cwd: process.cwd(), // Set working directory
-    entry: ['src/index.ts'], // Entry files
+    cwd: process.cwd(),
+    entry: ['src/index.ts'],
     outputs: [
-        { format: 'es', dist: 'dist/es' }, // ESM output directory
-        { format: 'cjs', dist: 'dist/cjs' }, // CJS output directory
+        { format: 'es', dist: 'dist/es' },
+        { format: 'cjs', dist: 'dist/cjs' },
     ],
-    cssFileName: 'style.css', // CSS file output name
-    allowedPolyfills: ['fetch', 'Promise'], // Specify allowed polyfills
-    ignoredPolyfills: ['Symbol'], // Specify ignored polyfills
+    cssFileName: 'style.css',
+    visualize: true,
+    publint: {severity: 'error'},
+    includeRequiredPolyfill: ['fetch', 'Promise'],
+    skipRequiredPolyfillCheck: ['Symbol'],
     options: {
-        minify: true, // Minification option
-        sourcemap: true, // Enable sourcemaps
+        minify: true,
+        sourcemap: true,
     },
 })
 ```
 
-### 2. Build Your Library
+### 2️⃣ Build the Library
 
-Run the following command to bundle your library:
+Run the following command to bundle the library:
 
 ```sh
 vite build
 ```
 
-This will generate the output files in the `dist/es` and `dist/cjs` directories.
+Once the build is complete, the bundled files will be generated in the `dist/es` and `dist/cjs` directories.
 
-## Configuration Options
+## Options
 
-| Option               | Type                                       | Description |
-|----------------------|------------------------------------------|-------------|
-| `cwd`               | `string`                                  | The current working directory (default: `'.'`). |
-| `entry`             | `string[]`                                | The entry file(s) for the library (supports glob patterns). |
-| `outputs`           | `{format: 'es' \| 'cjs'; dist: string}[]` | Specifies the output formats and their respective directories. |
-| `cssFileName`       | `string`                                  | The name of the output CSS file. |
-| `allowedPolyfills`  | `string[]`                                | List of allowed polyfills for injection.<br />(Polyfills are included at runtime in the build) |
-| `ignoredPolyfills`  | `string[]`                                | List of ignored polyfills<br />(Builds without polyfills, ignoring errors; mainly used to exclude rarely used modern specs) |
-| `options`           | `BuildOptions`                            | Additional Vite build options. |
+| Option Name                | Type                                                    | Description                                         |
+|----------------------------|---------------------------------------------------------|-----------------------------------------------------|
+| *`entry`                    | `string` \| `string[]` \| `Record<string, string>`      | Entry file path (supports glob patterns)           |
+| `cwd`                      | `string`                                                | Current working directory (default: `'.'`)         |
+| `outputs`                  | `{ format: 'es' \| 'cjs'; dist: string }[]`             | Specifies module format and output directory       |
+| `cssFileName`              | `string`                                                | Output CSS file name                               |
+| `visualize`                | `boolean` \| [`PluginVisualizerOptions`](https://github.com/btd/rollup-plugin-visualizer?tab=readme-ov-file#options) | Enables [rollup-plugin-visualizer](https://github.com/btd/rollup-plugin-visualizer) |
+| `publint`                  | `{ severity?: 'error' \| 'warn' \| 'off' }`             | Specifies severity for publint checks<br />(`error`: exit with code 1, `warn`: show warnings only, `off`: disable check) |
+| `includeRequiredPolyfill`  | `string[]`                                              | List of required polyfills to be injected          |
+| `skipRequiredPolyfillCheck`| `string[]`                                              | List of polyfills to skip injection check         |
+| `options`                  | [`BuildOptions`](https://vite.dev/config/build-options) | Additional Vite build options                     |
 
-## 🎉 Why use pite?
+### `includeRequiredPolyfill` vs `skipRequiredPolyfillCheck`
 
-### Limitations of vite/tsup
+By default, `pite` detects code that requires polyfills based on the project's `browserslist` and raises an error if necessary. This ensures that the library functions correctly across different environments while preventing unnecessary polyfill injections that may increase build size.
 
-- Setting up Vite for library bundling can be complex if you have no prior experience.
-- Managing multiple libraries requires repeated bundling configurations.
-- `browserslist` does not natively determine necessary polyfills, requiring additional setup.
-- Using vite with [tsup](https://github.com/egoist/tsup) requires extra configuration.
-- When using tsup alone, it relies on esbuild, limiting access to the rich ecosystem of rollup plugins.
+The `includeRequiredPolyfill` and `skipRequiredPolyfillCheck` options allow you to adjust the polyfill injection criteria and processing behavior. These options provide flexibility in applying polyfills based on project requirements.
 
-> `@naverpay/pite` provides a standardized Vite config preset for library development.
+- `includeRequiredPolyfill` allows explicit inclusion of polyfills deemed necessary for the library’s functionality. By specifying the required polyfills, they will be automatically included to ensure proper execution. These polyfills are applied at runtime and are not bundled directly within the library. Therefore, `core-js-pure@3.x` must be installed as a dependency.
+- `skipRequiredPolyfillCheck` prevents errors from being raised even if certain polyfills are detected as necessary. This option is useful when the library does not require specific polyfills, despite automated detection indicating otherwise. `core-js` not only detects missing features in target environments but also applies polyfills for proposal-stage features, browser-reported bugs, and extensions to existing functionalities. As a result, an error may be triggered even for unused features.
 
-### Dual package build support
+## Example Packages
 
-- Supports both ESM and CJS formats.
-- Allows subpath specification using glob patterns.
-- Configurable output paths for each module system.
+Check out the configurations and build outputs of example libraries built using `pite`.
 
-### `browserslist`-based transpilation
+### [`@naverpay/hidash`](https://github.com/NaverPayDev/hidash/tree/main)
 
-- Uses `.browserslistrc` from the consuming project for transpilation.
-- If not specified, it follows [NaverPay's recommended configuration (@naverpay/browserslist-config)](https://github.com/NaverPayDev/browserslist-config#readme).
+- [Go to config](https://github.com/NaverPayDev/hidash/blob/main/vite.config.mts)
+- [unpkg `@naverpay/hidash`](https://www.unpkg.com/browse/@naverpay/hidash@latest/)
 
-### Automatic polyfill detection and optimization
+```js
+import { createViteConfig } from '@naverpay/pite'
 
-- Detects the need for polyfills based on `browserslist`.
-- Injects necessary polyfills at runtime using [`@rollup/plugin-babel`](https://github.com/rollup/plugins/tree/master/packages/babel) and [`@babel/plugin-transform-runtime`](https://babeljs.io/docs/babel-plugin-transform-runtime).
-- Supports `core-js-pure`, ensuring no global pollution.
+export default createViteConfig({
+    cwd: '.',
+    entry: ['!./src/**/*.bench.ts', '!./src/**/*.test.ts', './src/**/*.ts'],
+    outputs: [
+        {
+            format: 'cjs',
+            dist: 'dist',
+        },
+        {
+            format: 'es',
+            dist: 'dist',
+        },
+    ],
+    includeRequiredPolyfill: [
+        // https://bugs.chromium.org/p/v8/issues/detail?id=12681
+        'es.array.push',
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=1767541
+        'es.array.includes',
+        // https://issues.chromium.org/issues/40672866
+        'es.array.reduce',
+        // ...
+    ],
+})
+```
 
-### Best practices for library builds
+### [`@naverpay/vanilla-store`](https://github.com/NaverPayDev/pie/tree/main/packages/vanilla-store)
 
-- Includes entry path validation to enforce optimal directory structures.
-- Supports `preserveModules` and `preserveDirectives`.
-- Automatically detects external dependencies from `package.json` and excludes them from bundling.
-  - Excludes `dependencies`, `peerDependencies`, etc., by default.
+- [Go to config](https://github.com/NaverPayDev/pie/blob/main/packages/vanilla-store/vite.config.mjs)
+- [unpkg `@naverpay/vanilla-store`](https://www.unpkg.com/browse/@naverpay/vanilla-store@latest/)
 
-### Build validation with `publint`
+```js
+import { createViteConfig } from '@naverpay/pite'
 
-- Verifies `package.json` structure before build.
-- Checks the integrity of the build output after bundling.
-
-### Built-in `vite-tsup-plugin`
-
-- Works out-of-the-box with no additional tsup configuration.
-- Generates `.d.ts` declaration files for both ESM and CJS.
-- Resolves [`vite-plugin-dts` module resolution issues](https://github.com/NaverPayDev/pite/issues/27).
-- Allows the use of rollup plugins, unlike pure tsup-based builds.
-
-## 🤖 How pite works
-
-### Transpilation & polyfill handling
-
-- Uses [browserslist-to-esbuild](https://github.com/marcofugaro/browserslist-to-esbuild#readme) to read `browserslist` and convert it to esbuild targets.
-- Determines necessary transpilation and polyfills based on `browserslist`.
-- Injects `core-js-pure (3.39.0)` polyfills at runtime with [`@rollup/plugin-babel`](https://github.com/rollup/plugins) and [`@babel/plugin-transform-runtime`](https://babeljs.io/docs/babel-plugin-transform-runtime).
-
-### TypeScript file handling
-
-- Runs tsup via a custom `vite-tsup-plugin` to generate declaration files.
-
-### Build result validation
-
-- Uses a custom `rollup-plugin-publint` to check `package.json` structure before build and validate output integrity after build.
+export default createViteConfig({
+    cwd: '.',
+    entry: ['./src/index.ts'],
+    skipRequiredPolyfillCheck: [
+        'esnext.json.parse'
+    ],
+    options: {
+        minify: false,
+    },
+})
+```
 
 ## License
 
