@@ -1,5 +1,7 @@
 # `@naverpay/pite`
 
+> lang: [En](./README.md) | Ko
+
 복잡한 설정 없이 라이브러리 빌드를 지원하는 vite 번들러 configuration 패키지입니다.
 
 ## Why pite?
@@ -178,19 +180,6 @@ export default createViteConfig({
             dist: 'dist',
         },
     ],
-    entry: {
-        assign: './src/assign.ts',
-        before: './src/before.ts',
-        chunk: './src/chunk.ts',
-        clamp: './src/clamp.ts',
-        clone: './src/clone.ts',
-        cloneDeep: './src/cloneDeep.ts',
-        debounce: './src/debounce.ts',
-        delay: './src/delay.ts',
-        difference: './src/difference.ts',
-        entries: './src/entries.ts',
-        //...
-    },
     includeRequiredPolyfill: [
         // https://bugs.chromium.org/p/v8/issues/detail?id=12681
         'es.array.push', 
