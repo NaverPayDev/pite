@@ -14,20 +14,61 @@ import {isValidBrowserslistConfig, replaceExtension} from './util'
 import vitePluginTsup from './vite-tsup-plugin'
 
 export interface ViteConfigProps {
+    /**
+     * Current working directory
+     *
+     * @default - '.'
+     */
     cwd?: string
+    /**
+     * Entry file path (supports glob patterns)
+     */
     entry: string | string[] | Record<string, string>
+    /**
+     * Specifies module format and output directory
+     *
+     * @default - [{format: 'es', dist: 'dist/esm'}, {format: 'cjs', dist: 'dist/cjs'}]
+     */
     outputs?: {format: 'es' | 'cjs'; dist: string}[]
+    /**
+     * Output CSS file name
+     *
+     * @default - 'style.css'
+     */
     cssFileName?: string
+    /**
+     * Enables `rollup-plugin-visualizer`
+     * @description configure options for `rollup-plugin-visualizer`
+     *
+     * @default - false
+     * @see https://github.com/btd/rollup-plugin-visualizer?tab=readme-ov-file#options
+     */
     visualize?: boolean | PluginVisualizerOptions
+    /**
+     * Publint severity setting
+     *
+     * - `'error'`: Exit code is 1 when the Publint check fails
+     * - `'warn'`: Prints a warning if the Publint check fails (doesn’t affect exit code)
+     * - `'off'`: Disables the Publint check
+     *
+     * @default - {severity: 'error'}
+     */
     publint?: {severity?: 'error' | 'warn' | 'off'}
     /**
-     * @description List of polyfills that need to be injected
+     * List of polyfills that need to be injected
      */
     includeRequiredPolyfill?: string[]
     /**
-     * @description Skip verification for required polyfill injection
+     * Skip verification for required polyfill injection
+     * (use with caution - omitting truly required polyfills may cause issues in unsupported environments)
      */
     skipRequiredPolyfillCheck?: string[]
+    /**
+     * Additional Vite build options
+     *
+     * @see https://vite.dev/config/build-options
+     * @see https://ko.vite.dev/config/build-options
+     */
     options?: BuildOptions
 }
 
