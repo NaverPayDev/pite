@@ -1,0 +1,69 @@
+{
+    "name": "react-sass",
+    "private": true,
+    "version": "0.0.0",
+    "type": "commonjs",
+    "main": "./build-result/cjs/index.js",
+    "module": "./build-result/esm/index.mjs",
+    "types": "./build-result/cjs/index.d.ts",
+    "scripts": {
+        "build": "pnpm clean && vite build",
+        "clean": "rm -rf build-result"
+    },
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./build-result/esm/index.d.mts",
+                "default": "./build-result/esm/index.mjs"
+            },
+            "require": {
+                "types": "./build-result/cjs/index.d.ts",
+                "default": "./build-result/cjs/index.js"
+            }
+        },
+        "./index.css": {
+            "import": "./build-result/esm/index.css",
+            "require": "./build-result/cjs/index.css"
+        },
+        "./package.json": "./package.json",
+        "./foo": {
+            "import": {
+                "types": "./build-result/esm/components/Foo.d.mts",
+                "default": "./build-result/esm/components/Foo.mjs"
+            },
+            "require": {
+                "types": "./build-result/cjs/components/Foo.d.ts",
+                "default": "./build-result/cjs/components/Foo.js"
+            }
+        },
+        "./bar": {
+            "import": {
+                "types": "./build-result/esm/components/Bar.d.mts",
+                "default": "./build-result/esm/components/Bar.mjs"
+            },
+            "require": {
+                "types": "./build-result/cjs/components/Bar.d.ts",
+                "default": "./build-result/cjs/components/Bar.js"
+            }
+        }
+    },
+    "peerDependencies": {
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "classnames": ">=2"
+    },
+    "devDependencies": {
+        "@naverpay/pite": "^2.1.0",
+        "@types/react": "^19.0.10",
+        "@types/react-dom": "^19.0.4",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "typescript": "^5.6.3",
+        "vite": "^6.2.0",
+        "classnames": "^2.5.1"
+    },
+    "files": [
+        "build-result"
+    ],
+    "sideEffects": false
+}

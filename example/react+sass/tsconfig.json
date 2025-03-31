@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "jsx": "react-jsx" /* Specify what JSX code is generated. */,
+        "module": "commonjs" /* Specify what module code is generated. */,
+        "strict": true /* Enable all strict type-checking options. */,
+        "skipLibCheck": true /* Skip type checking all .d.ts files. */
+    },
+    "exclude": ["build-result"]
+}
