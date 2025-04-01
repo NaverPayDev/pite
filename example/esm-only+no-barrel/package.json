@@ -1,0 +1,30 @@
+{
+    "name": "esm-only-no-barrel",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "build": "pnpm clean && vite build",
+        "clean": "rm -rf build-result"
+    },
+    "exports": {
+        "./package.json": "./package.json",
+        "./sleep": {
+            "types": "./build-result/sleep.d.ts",
+            "default": "./build-result/sleep.mjs"
+        },
+        "./sum": {
+            "types": "./build-result/sum.d.ts",
+            "default": "./build-result/sum.mjs"
+        }
+    },
+    "devDependencies": {
+        "@naverpay/pite": "^2.1.0",
+        "typescript": "^5.6.3",
+        "vite": "^6.2.0"
+    },
+    "files": [
+        "build-result"
+    ],
+    "sideEffects": false
+}
