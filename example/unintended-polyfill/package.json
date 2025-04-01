@@ -1,0 +1,30 @@
+{
+    "name": "unintended-polyfill",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "build": "pnpm clean && vite build",
+        "clean": "rm -rf build-result"
+    },
+    "exports": {
+        "./package.json": "./package.json",
+        "./parseJson": {
+            "types": "./build-result/parseJson.d.ts",
+            "default": "./build-result/parseJson.mjs"
+        },
+        "./pushToArray": {
+            "types": "./build-result/pushToArray.d.ts",
+            "default": "./build-result/pushToArray.mjs"
+        }
+    },
+    "devDependencies": {
+        "@naverpay/pite": "^2.1.0",
+        "typescript": "^5.6.3",
+        "vite": "^6.2.0"
+    },
+    "files": [
+        "build-result"
+    ],
+    "sideEffects": false
+}
