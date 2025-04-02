@@ -32,7 +32,8 @@ jobs:
             - name: setup pnpm and install dependencies
               uses: pnpm/action-setup@v3
               with:
-                  run_install: true
+                  run_install: |
+                      recursive: false
 
             - name: install dependencies
               run: pnpm install --frozen-lockfile
