@@ -6,3 +6,6 @@
 
 # pnpm lock yaml 제외
 pnpm-lock.yaml
+
+# 예시 build 결과물 제외
+build-result
