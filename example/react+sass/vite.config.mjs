@@ -1,7 +1,7 @@
 import {createViteConfig} from '@naverpay/pite'
 
 export default createViteConfig({
-    cwd: __dirname,
+    cwd: import.meta.dirname,
     cssFileName: 'index.css',
     entry: ['./src/**/*.@(ts|tsx)'],
     outputs: [
