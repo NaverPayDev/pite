@@ -59,6 +59,7 @@ pnpm-lock.yaml
 .next
 
 dist
+build-result
 
 apps/docs/docs
 

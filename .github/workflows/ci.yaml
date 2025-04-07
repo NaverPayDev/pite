@@ -13,7 +13,8 @@ jobs:
               run: corepack enable
             - uses: pnpm/action-setup@v3
               with:
-                  run_install: true
+                  run_install: |
+                      recursive: false
             - run: pnpm run prettier
             - run: pnpm run lint
             - run: pnpm run markdownlint
@@ -26,5 +27,7 @@ jobs:
               run: corepack enable
             - uses: pnpm/action-setup@v3
               with:
-                  run_install: true
+                  run_install: |
+                      recursive: false
+
             - run: pnpm run build
