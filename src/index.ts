@@ -3,7 +3,7 @@ import babel from '@rollup/plugin-babel'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import preserveDirectives from 'rollup-plugin-preserve-directives'
 import {PluginVisualizerOptions, visualizer} from 'rollup-plugin-visualizer'
-import {BuildOptions, defineConfig, Plugin} from 'vite'
+import {BuildOptions, defineConfig, Plugin, UserConfig} from 'vite'
 
 import {getBrowserslistConfig} from './browserslist'
 import {getExternalDependencies} from './dependencies'
@@ -70,6 +70,12 @@ export interface ViteConfigProps {
      * @see https://ko.vite.dev/config/build-options
      */
     options?: BuildOptions
+
+    /**
+     * Vite plugins
+     * @see https://vite.dev/guide/using-plugins
+     */
+    vitePlugins?: UserConfig['plugins']
 }
 
 export function createViteConfig({
@@ -84,6 +90,7 @@ export function createViteConfig({
     publint: {severity = 'error'} = {},
     includeRequiredPolyfill = [],
     skipRequiredPolyfillCheck = [],
+    vitePlugins = [],
     options,
 }: ViteConfigProps) {
     const browserslistConfig = getBrowserslistConfig(cwd)
@@ -184,7 +191,10 @@ export function createViteConfig({
         ...restOptions,
     }
 
-    const plugins = [vitePluginTsup({formats, entry, outDir: {esm: esmDir, cjs: cjsDir}})]
+    const plugins: UserConfig['plugins'] = [
+        vitePluginTsup({formats, entry, outDir: {esm: esmDir, cjs: cjsDir}}),
+        ...vitePlugins,
+    ]
 
     return defineConfig({build, plugins})
 }
