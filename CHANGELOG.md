@@ -1,5 +1,13 @@
 # @naverpay/pite
 
+## 2.2.0
+
+### Minor Changes
+
+-   d79b6e8: Add support for custom Vite plugins in config creation
+
+    PR: [Add support for custom Vite plugins in config creation](https://github.com/NaverPayDev/pite/pull/82)
+
 ## 2.1.0
 
 ### Minor Changes
