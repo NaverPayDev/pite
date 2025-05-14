@@ -1,8 +1,8 @@
 import defaultBrowserslist from '@naverpay/browserslist-config'
 import babel from '@rollup/plugin-babel'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
-import preserveDirectives from 'rollup-plugin-preserve-directives'
 import {PluginVisualizerOptions, visualizer} from 'rollup-plugin-visualizer'
+import preserveDirectives from 'rollup-preserve-directives'
 import {BuildOptions, defineConfig, Plugin, UserConfig} from 'vite'
 
 import {getBrowserslistConfig} from './browserslist'
