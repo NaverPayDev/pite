@@ -44,7 +44,7 @@ jobs:
                   npm_tag: rc # Specify the npm tag to use for deployment
                   npm_token: ${{ secrets.NPM_TOKEN }} # Provide the token required for npm publishing
                   publish_script: pnpm run release:canary # Script to execute Canary deployment
-                  packages_dir: packages # Directory of packages to detect changes (default: packages,share)
+                  packages_dir: '.'
                   excludes: '.turbo,.github' # Files or directories to exclude from change detection
                   version_template: '{VERSION}-rc.{DATE}-{COMMITID7}'
                   create_release: true
