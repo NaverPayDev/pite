@@ -18,26 +18,20 @@ jobs:
                   token: ${{ secrets.ACTION_TOKEN }}
                   fetch-depth: 0
 
+            - uses: pnpm/action-setup@v4
             - name: Use Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: '22.x'
-
-            - name: Enable corepack
-              run: corepack enable
-
-            - name: setup pnpm and install dependencies
-              uses: pnpm/action-setup@v3
-              with:
-                  run_install: |
-                      recursive: false
+                  node-version: '22'
+                  cache: 'pnpm'
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
 
             - name: Create Release Pull Request
               id: changesets
               uses: NaverPayDev/changeset-actions/publish@main
               with:
                   github_token: ${{ secrets.ACTION_TOKEN }}
-                  npm_token: ${{ secrets.NPM_TOKEN }}
                   git_username: npayfebot
                   git_email: npay.fe.bot@navercorp.com
                   publish_script: pnpm release
@@ -45,5 +39,6 @@ jobs:
                   commit_message: '📦 bump changed packages version'
                   create_github_release_tag: true
                   formatting_script: pnpm run markdownlint:fix
+                  npm_token: ${{ secrets.NPM_TOKEN }}
               env:
                   GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
