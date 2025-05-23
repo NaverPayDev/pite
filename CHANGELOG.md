@@ -1,5 +1,13 @@
 # @naverpay/pite
 
+## 2.2.1
+
+### Patch Changes
+
+-   0812621: 🔧 Update rollup plugin dependencies to rollup-preserve-directives
+
+    PR: [🔧 Update rollup plugin dependencies to rollup-preserve-directives](https://github.com/NaverPayDev/pite/pull/86)
+
 ## 2.2.0
 
 ### Minor Changes
