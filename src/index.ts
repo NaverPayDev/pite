@@ -68,14 +68,24 @@ export interface ViteConfigProps {
      *
      * @see https://vite.dev/config/build-options
      * @see https://ko.vite.dev/config/build-options
+     * @deprecated Use `config.build` instead
      */
     options?: BuildOptions
 
     /**
      * Vite plugins
      * @see https://vite.dev/guide/using-plugins
+     * @deprecated Use `config.plugins` instead
      */
     vitePlugins?: UserConfig['plugins']
+
+    /**
+     * Additional Vite config options
+     * (e.g., build, plugins, assetsInclude, define, resolve, etc.)
+     *
+     * @see https://vite.dev/config/
+     */
+    config?: UserConfig
 }
 
 export function createViteConfig({
@@ -92,11 +102,18 @@ export function createViteConfig({
     skipRequiredPolyfillCheck = [],
     vitePlugins = [],
     options,
+    config,
 }: ViteConfigProps) {
     const browserslistConfig = getBrowserslistConfig(cwd)
     const externalDeps = getExternalDependencies(cwd)
 
-    const {lib: inputLib, rollupOptions: inputRollupOptions, ...restOptions} = options || {lib: {}, rollupOptions: {}}
+    // Merge deprecated options with config.build
+    const mergedBuildOptions = {...options, ...config?.build}
+    const {
+        lib: inputLib,
+        rollupOptions: inputRollupOptions,
+        ...restOptions
+    } = mergedBuildOptions || {lib: {}, rollupOptions: {}}
 
     const inputExternal = inputRollupOptions?.external || ([] as string[])
     const external =
@@ -193,8 +210,9 @@ export function createViteConfig({
 
     const plugins: UserConfig['plugins'] = [
         vitePluginTsup({formats, entry, outDir: {esm: esmDir, cjs: cjsDir}}),
-        ...vitePlugins,
+        ...(vitePlugins || []),
+        ...(config?.plugins || []),
     ]
 
-    return defineConfig({build, plugins})
+    return defineConfig({...config, build, plugins})
 }
