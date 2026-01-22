@@ -1,19 +1,5 @@
 # @naverpay/pite
 
-## 2.3.0
-
-### Minor Changes
-
--   b46705d: [공통] viteConfig 를 받을 수 있도록 수정하고, 기존 옵션들은 deprecated 처리합니다
-
-    PR: [[공통] viteConfig 를 받을 수 있도록 수정하고, 기존 옵션들은 deprecated 처리합니다](https://github.com/NaverPayDev/pite/pull/91)
-
-### Patch Changes
-
--   0812621: 🔧 Update rollup plugin dependencies to rollup-preserve-directives
-
-    PR: [🔧 Update rollup plugin dependencies to rollup-preserve-directives](https://github.com/NaverPayDev/pite/pull/86)
-
 ## 2.2.0
 
 ### Minor Changes
