@@ -107,8 +107,7 @@ export function createViteConfig({
     const browserslistConfig = getBrowserslistConfig(cwd)
     const externalDeps = getExternalDependencies(cwd)
 
-    // Merge deprecated options with config.build
-    const mergedBuildOptions = {...options, ...config?.build}
+    const mergedBuildOptions = {...options, ...(config?.build || {})}
     const {
         lib: inputLib,
         rollupOptions: inputRollupOptions,
