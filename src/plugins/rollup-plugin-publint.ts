@@ -32,7 +32,9 @@ const publint = ({cwd, severity}: PublintOption): Plugin => {
                 }
                 hasBuildStartError = true
                 console.log('\n')
-                severity === 'error' && process.exit(1)
+                if (severity === 'error') {
+                    this.error(error instanceof Error ? error.message : 'publint check failed before build')
+                }
             }
         },
         closeBundle: {
@@ -65,7 +67,9 @@ const publint = ({cwd, severity}: PublintOption): Plugin => {
                 }
                 if (hasBuildEndError) {
                     console.log('\n')
-                    severity === 'error' && process.exit(1)
+                    if (severity === 'error') {
+                        throw new Error('publint check failed after build')
+                    }
                 }
             },
             sequential: true,
