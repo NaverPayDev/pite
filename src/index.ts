@@ -8,6 +8,8 @@ import {BuildOptions, defineConfig, Plugin, UserConfig} from 'vite'
 import {getBrowserslistConfig} from './browserslist'
 import {getExternalDependencies} from './dependencies'
 import {getViteEntry} from './get-vite-entry'
+import {PITE_INJECTED} from './phantom-deps'
+import phantomDepsPlugin from './plugins/rollup-plugin-phantom-deps'
 import publintPlugin from './plugins/rollup-plugin-publint'
 import {shouldInjectPolyfill} from './polyfill'
 import {isValidBrowserslistConfig, replaceExtension} from './util'
@@ -55,6 +57,16 @@ export interface ViteConfigProps {
      */
     publint?: {severity?: 'error' | 'warn' | 'off'}
     /**
+     * Phantom dependency check setting
+     *
+     * - `'error'`: Exit code is 1 when phantom dependencies are detected
+     * - `'warn'`: Prints a warning if phantom dependencies are detected (doesn’t affect exit code)
+     * - `'off'`: Disables the phantom dependency check
+     *
+     * @default - {severity: 'error'}
+     */
+    phantomDepCheck?: {severity?: 'error' | 'warn' | 'off'}
+    /**
      * List of polyfills that need to be injected
      */
     includeRequiredPolyfill?: string[]
@@ -98,6 +110,7 @@ export function createViteConfig({
     cssFileName = 'style.css',
     visualize = false,
     publint: {severity = 'error'} = {},
+    phantomDepCheck: {severity: phantomDepSeverity = 'error'} = {},
     includeRequiredPolyfill = [],
     skipRequiredPolyfillCheck = [],
     vitePlugins = [],
@@ -183,7 +196,7 @@ export function createViteConfig({
                             'babel-plugin-polyfill-corejs3',
                             {
                                 method: 'usage-pure',
-                                version: '3.39.0',
+                                version: PITE_INJECTED['core-js-pure'],
                                 proposals: true,
                                 shouldInjectPolyfill: shouldInjectPolyfill({
                                     include: new Set(includeRequiredPolyfill),
@@ -201,6 +214,7 @@ export function createViteConfig({
                 ...(visualize ? [visualizer(typeof visualize === 'object' ? visualize : {})] : []),
                 preserveDirectives(),
                 ...(severity !== 'off' ? [publintPlugin({cwd, severity})] : []),
+                ...(phantomDepSeverity !== 'off' ? [phantomDepsPlugin({cwd, severity: phantomDepSeverity})] : []),
             ],
             ...inputRollupOptions,
         },
