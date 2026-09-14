@@ -8,6 +8,7 @@ import {BuildOptions, defineConfig, Plugin, UserConfig} from 'vite'
 import {getBrowserslistConfig} from './browserslist'
 import {getExternalDependencies} from './dependencies'
 import {getViteEntry} from './get-vite-entry'
+import {readManifest} from './manifest'
 import publintPlugin from './plugins/rollup-plugin-publint'
 import {shouldInjectPolyfill} from './polyfill'
 import {isValidBrowserslistConfig, replaceExtension} from './util'
@@ -104,8 +105,9 @@ export function createViteConfig({
     options,
     config,
 }: ViteConfigProps) {
-    const browserslistConfig = getBrowserslistConfig(cwd)
-    const externalDeps = getExternalDependencies(cwd)
+    const manifest = readManifest(cwd)
+    const browserslistConfig = getBrowserslistConfig(cwd, manifest)
+    const externalDeps = getExternalDependencies(manifest)
 
     const mergedBuildOptions = {...options, ...(config?.build || {})}
     const {
