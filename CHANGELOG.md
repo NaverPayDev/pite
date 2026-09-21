@@ -1,5 +1,11 @@
 # @naverpay/pite
 
+## 2.4.0
+
+### Minor Changes
+
+-   a2180e1: fix: require `core-js-pure` in `dependencies` when `includeRequiredPolyfill` injects polyfills, and stop marking `core-js-pure` as external unconditionally
+
 ## 2.3.1
 
 ### Patch Changes
