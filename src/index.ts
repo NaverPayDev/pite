@@ -8,8 +8,10 @@ import {BuildOptions, defineConfig, Plugin, UserConfig} from 'vite'
 import {getBrowserslistConfig} from './browserslist'
 import {getExternalDependencies} from './dependencies'
 import {getViteEntry} from './get-vite-entry'
+import {readManifest} from './manifest'
 import publintPlugin from './plugins/rollup-plugin-publint'
 import {shouldInjectPolyfill} from './polyfill'
+import {assertPolyfillDependency, CORE_JS_VERSION} from './polyfill-dependency'
 import {isValidBrowserslistConfig, replaceExtension} from './util'
 import vitePluginTsup from './vite-tsup-plugin'
 
@@ -56,6 +58,9 @@ export interface ViteConfigProps {
     publint?: {severity?: 'error' | 'warn' | 'off'}
     /**
      * List of polyfills that need to be injected
+     *
+     * Injected code imports from `core-js-pure`, so it must be declared in `dependencies`
+     * with a floor of at least the version pite generates polyfill paths for (`3.39.0`).
      */
     includeRequiredPolyfill?: string[]
     /**
@@ -104,8 +109,13 @@ export function createViteConfig({
     options,
     config,
 }: ViteConfigProps) {
-    const browserslistConfig = getBrowserslistConfig(cwd)
-    const externalDeps = getExternalDependencies(cwd)
+    const manifest = readManifest(cwd)
+    const browserslistConfig = getBrowserslistConfig(cwd, manifest)
+    const externalDeps = getExternalDependencies(manifest)
+
+    if (includeRequiredPolyfill.length > 0) {
+        assertPolyfillDependency(manifest)
+    }
 
     const mergedBuildOptions = {...options, ...(config?.build || {})}
     const {
@@ -119,8 +129,8 @@ export function createViteConfig({
         typeof inputExternal === 'function'
             ? inputExternal
             : Array.isArray(inputExternal)
-              ? [/core-js-pure/, ...externalDeps, ...inputExternal]
-              : [/core-js-pure/, ...externalDeps, inputExternal]
+              ? [...externalDeps, ...inputExternal]
+              : [...externalDeps, inputExternal]
 
     delete inputRollupOptions?.external
 
@@ -183,7 +193,7 @@ export function createViteConfig({
                             'babel-plugin-polyfill-corejs3',
                             {
                                 method: 'usage-pure',
-                                version: '3.39.0',
+                                version: CORE_JS_VERSION,
                                 proposals: true,
                                 shouldInjectPolyfill: shouldInjectPolyfill({
                                     include: new Set(includeRequiredPolyfill),

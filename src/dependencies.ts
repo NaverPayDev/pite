@@ -1,21 +1,11 @@
-import fs from 'fs'
-import path from 'path'
-
 import builtins from 'builtin-modules'
 
-export function getExternalDependencies(cwd: string) {
-    const packageJSONPath = path.join(cwd, 'package.json')
-    const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, 'utf-8'))
+import {Manifest} from './manifest'
 
-    let deps: string[] = [...builtins]
+const keysOf = (record: unknown) => (record && typeof record === 'object' ? Object.keys(record) : [])
 
-    if ('dependencies' in packageJSON && typeof packageJSON.dependencies === 'object') {
-        deps = [...deps, ...Object.keys(packageJSON.dependencies)]
-    }
-
-    if ('peerDependencies' in packageJSON && typeof packageJSON.peerDependencies === 'object') {
-        deps = [...deps, ...Object.keys(packageJSON.peerDependencies)]
-    }
+export function getExternalDependencies(manifest: Manifest) {
+    const deps = [...builtins, ...keysOf(manifest.dependencies), ...keysOf(manifest.peerDependencies)]
 
     return deps.flatMap((dep) => [dep, new RegExp(`^${dep}/.*`)])
 }
